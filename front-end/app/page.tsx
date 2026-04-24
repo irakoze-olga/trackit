@@ -1,0 +1,221 @@
+'use client'
+
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { OpportunityCard } from "@/components/opportunity-card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import type { Opportunity, OpportunityCategory } from "@/lib/types"
+import {
+  Search,
+  GraduationCap,
+  Briefcase,
+  Trophy,
+  Users,
+  TrendingUp,
+  Target,
+} from "lucide-react"
+import { getHomePageData } from "@/lib/backend-api"
+
+const categories: { value: OpportunityCategory | "all"; label: string; icon: React.ReactNode }[] = [
+  { value: "all", label: "All Categories", icon: <Search className="h-4 w-4" /> },
+  { value: "scholarship", label: "Scholarships", icon: <GraduationCap className="h-4 w-4" /> },
+  { value: "internship", label: "Internships", icon: <Briefcase className="h-4 w-4" /> },
+  { value: "job", label: "Jobs", icon: <Briefcase className="h-4 w-4" /> },
+  { value: "competition", label: "Competitions", icon: <Trophy className="h-4 w-4" /> },
+  { value: "workshop", label: "Workshops", icon: <Users className="h-4 w-4" /> },
+  { value: "grant", label: "Grants", icon: <TrendingUp className="h-4 w-4" /> },
+  { value: "fellowship", label: "Fellowships", icon: <Target className="h-4 w-4" /> },
+]
+
+export default function HomePage() {
+  const router = useRouter()
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<OpportunityCategory | "all">("all")
+  const [stats, setStats] = useState({
+    active_opportunities: 0,
+    registered_users: 0,
+    applications_submitted: 0,
+    success_rate: 0,
+  })
+
+  const handleRoleSelect = (role: "student" | "teacher") => {
+    router.push(`/dashboard/${role}`)
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    getHomePageData(selectedCategory)
+      .then((payload) => {
+        setOpportunities(payload.opportunities)
+        setStats(payload.stats)
+      })
+      .catch(() => {
+        setOpportunities([])
+      })
+      .finally(() => setLoading(false))
+  }, [selectedCategory])
+
+  const filteredOpportunities = opportunities.filter((opportunity) =>
+    opportunity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    opportunity.organization.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    opportunity.description.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+
+      <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 py-20 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <Badge variant="secondary" className="mb-4">
+            Discover Your Next Opportunity
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
+            Track, Apply, and Land Your Dream Opportunities
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 text-pretty">
+            TrackIt connects students with scholarships, internships, jobs, competitions, and more.
+            Find opportunities tailored to your goals and track your applications in one place.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" onClick={() => handleRoleSelect("student")}>
+              Get Started Free
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="#opportunities">Browse Opportunities</Link>
+            </Button>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            { label: "Active Opportunities", value: stats.active_opportunities.toString() },
+            { label: "Students Registered", value: stats.registered_users.toString() },
+            { label: "Applications Submitted", value: stats.applications_submitted.toString() },
+            { label: "Success Rate", value: `${stats.success_rate}%` },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary">{stat.value}</div>
+              <div className="text-sm text-muted-foreground">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-12 px-4 bg-muted/30">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-8">Explore by Category</h2>
+          <div className="flex flex-wrap justify-center gap-3">
+            {categories.map((category) => (
+              <Button
+                key={category.value}
+                variant={selectedCategory === category.value ? "default" : "outline"}
+                className="flex items-center gap-2"
+                onClick={() => setSelectedCategory(category.value)}
+              >
+                {category.icon}
+                {category.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="opportunities" className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+              <h2 className="text-3xl font-bold">Latest Opportunities</h2>
+              <p className="text-muted-foreground">Find your next big opportunity</p>
+            </div>
+            <div className="flex gap-4 w-full md:w-auto">
+              <div className="relative flex-1 md:w-80">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search opportunities..."
+                  className="pl-10"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                />
+              </div>
+              <Select
+                value={selectedCategory}
+                onValueChange={(value) => setSelectedCategory(value as OpportunityCategory | "all")}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.value} value={category.value}>
+                      {category.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="h-72 bg-muted animate-pulse rounded-lg" />
+              ))}
+            </div>
+          ) : filteredOpportunities.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredOpportunities.map((opportunity) => (
+                <OpportunityCard
+                  key={opportunity.id}
+                  opportunity={opportunity}
+                  onApply={(opportunityId) => router.push(`/opportunities/${opportunityId}`)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">?</div>
+              <h3 className="text-xl font-semibold mb-2">No opportunities found</h3>
+              <p className="text-muted-foreground mb-4">
+                {searchQuery ? "Try adjusting your search terms" : "Check back later for new opportunities"}
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearchQuery("")
+                  setSelectedCategory("all")
+                }}
+              >
+                Clear Filters
+              </Button>
+            </div>
+          )}
+
+          {filteredOpportunities.length > 0 && (
+            <div className="text-center mt-12">
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/search">View All Opportunities</Link>
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  )
+}
