@@ -79,7 +79,7 @@ export default function SignUpPage() {
           <CardDescription>Join TrackIt and discover opportunities</CardDescription>
         </CardHeader>
         <form onSubmit={handleSignUp}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -90,7 +90,7 @@ export default function SignUpPage() {
             {/* Role Selection */}
             <Field>
               <FieldLabel>I am a</FieldLabel>
-              <RadioGroup value={role} onValueChange={(v) => setRole(v as "student" | "teacher")} className="grid grid-cols-2 gap-4 mt-2">
+              <RadioGroup value={role} onValueChange={(v) => setRole(v as "student" | "teacher")} className="grid grid-cols-2 gap-8 mt-2">
                 <div>
                   <RadioGroupItem value="student" id="student" className="peer sr-only" />
                   <Label
@@ -213,7 +213,7 @@ export default function SignUpPage() {
             </FieldGroup>
           </CardContent>
           
-          <CardFooter className="flex flex-col gap-4">
+          <CardFooter className="flex flex-col gap-8 pt-6">
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Spinner className="mr-2" /> : null}
               {loading ? "Creating account..." : "Create Account"}

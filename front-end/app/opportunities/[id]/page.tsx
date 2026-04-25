@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { useParams, notFound } from "next/navigation"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { OpportunityDetail } from "@/components/opportunity-detail"
 import type { Opportunity, Profile } from "@/lib/types"
 import { getOpportunityDetailData, incrementOpportunityView } from "@/lib/backend-api"
@@ -51,18 +49,12 @@ export default function OpportunityPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header user={data.userProfile} />
-      <main className="flex-1">
-        <OpportunityDetail
-          opportunity={data.opportunity}
-          poster={data.poster}
-          userProfile={data.userProfile}
-          hasApplied={data.hasApplied}
-          isSaved={data.isSaved}
-        />
-      </main>
-      <Footer />
-    </div>
+    <OpportunityDetail
+      opportunity={data.opportunity}
+      poster={data.poster}
+      userProfile={data.userProfile}
+      hasApplied={data.hasApplied}
+      isSaved={data.isSaved}
+    />
   )
 }

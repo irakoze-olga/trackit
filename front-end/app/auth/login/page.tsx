@@ -52,7 +52,7 @@ export default function LoginPage() {
           <CardDescription>Sign in to your TrackIt account</CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
-          <CardContent className="space-y-5">
+          <CardContent className="space-y-6">
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -94,7 +94,7 @@ export default function LoginPage() {
             </FieldGroup>
           </CardContent>
           
-          <CardFooter className="flex flex-col gap-5 pt-2">
+          <CardFooter className="flex flex-col gap-8 pt-6">
             <Button type="submit" id="login-submit" className="w-full" disabled={loading}>
               {loading ? <Spinner className="mr-2" /> : null}
               {loading ? "Signing in..." : "Sign In"}

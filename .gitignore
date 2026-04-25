@@ -1,8 +1,8 @@
 .codex
-/node_modules
 /.next
 .venv
 .txt
 .env
 *.env.*
 *.env
+/node_modules

@@ -1,7 +1,15 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Logo } from "@/components/logo"
 
 export function Footer() {
+  const pathname = usePathname()
+  const isDashboardPage = pathname?.startsWith("/dashboard")
+
+  if (isDashboardPage) return null
+
   return (
     <footer className="border-t bg-muted/30">
       <div className="container mx-auto px-4 py-12">
@@ -64,12 +72,12 @@ export function Footer() {
             <h3 className="font-semibold mb-4 text-sm">Legal</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Terms of Service
                 </Link>
               </li>
@@ -78,7 +86,7 @@ export function Footer() {
         </div>
         
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} TrackIt. All rights reserved.</p>
+          <p suppressHydrationWarning>&copy; {new Date().getFullYear()} TrackIt. All rights reserved.</p>
         </div>
       </div>
     </footer>

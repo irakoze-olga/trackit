@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
+import { ModeToggle } from "@/components/mode-toggle"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,6 +68,9 @@ export function Header({ user }: HeaderProps) {
   ]
 
   const isAuthPage = pathname?.startsWith("/auth")
+  const isDashboardPage = pathname?.startsWith("/dashboard")
+
+  if (isDashboardPage) return null
 
   if (isAuthPage) {
     return (
@@ -75,6 +79,7 @@ export function Header({ user }: HeaderProps) {
           <Link href="/">
             <Logo size="md" />
           </Link>
+          <ModeToggle />
         </div>
       </header>
     )
@@ -177,6 +182,8 @@ export function Header({ user }: HeaderProps) {
               </Button>
             </div>
           )}
+
+          <ModeToggle />
 
           {/* Mobile menu */}
           <Sheet>

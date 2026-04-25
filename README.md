@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎯 TrackIt
+# TrackIt
 
 ### Your Opportunities. Tracked. Delivered. Never Missed.
 
@@ -17,7 +17,7 @@
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 
 - [Overview](#-overview)
 - [Features](#-features)
@@ -38,7 +38,7 @@
 
 ---
 
-## 🌍 Overview
+## Overview
 
 TrackIt solves a painful problem students face every day: **great opportunities get missed because no one told them about it in time.**
 
@@ -46,35 +46,35 @@ Teachers, admins, and institutions post opportunities (scholarships, hackathons,
 
 ---
 
-## ✨ Features
+## Features
 
 ### For Students
-- 🔍 Discover curated, admin-approved opportunities
-- 🔖 Save / bookmark events of interest
-- 📅 Track application status in a personal dashboard
-- 🔔 Receive deadline reminders (7 days → 3 days → 1 day → 1 hour)
-- ⭐ Rate opportunities after the deadline for accuracy & legitimacy
-- 📤 Share opportunities with peers
+-  Discover curated, admin-approved opportunities
+-  Save / bookmark events of interest
+-  Track application status in a personal dashboard
+-  Receive deadline reminders (7 days → 3 days → 1 day → 1 hour)
+-  Rate opportunities after the deadline for accuracy & legitimacy
+-  Share opportunities with peers
 
 ### For Teachers / Opportunity Posters
-- 📝 Post opportunities with title, description, deadline, eligibility criteria, and application link
-- 📊 View engagement stats on posted events
+-  Post opportunities with title, description, deadline, eligibility criteria, and application link
+-  View engagement stats on posted events
 
-### For Admins
-- 🛡️ Review pending events in a moderation dashboard
-- ✅ Approve or reject submissions
-- 🚨 View scam-flagged events for manual inspection
-- 📈 Access platform analytics and event archive
+## For Admins
+-  Review pending events in a moderation dashboard
+-  Approve or reject submissions
+-  View scam-flagged events for manual inspection
+-  Access platform analytics and event archive
 
 ### Platform-Wide
-- 🤖 Automated scam detection on event submissions
-- 🗂️ Calendar and listing views for all published events
-- 🗄️ Event archiving for reference and analytics
-- 🔄 Real-time notifications
+-  Automated scam detection on event submissions
+-  Calendar and listing views for all published events
+-  Event archiving for reference and analytics
+-  Real-time notifications
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```
 [Teacher / Student / Admin Posts Event]
@@ -143,7 +143,7 @@ Teachers, admins, and institutions post opportunities (scholarships, hackathons,
 
 ---
 
-## 👥 User Roles
+##  User Roles
 
 | Role | Capabilities |
 |------|-------------|
@@ -154,7 +154,7 @@ Teachers, admins, and institutions post opportunities (scholarships, hackathons,
 
 ---
 
-## 🔄 Event Lifecycle
+##  Event Lifecycle
 
 ```
 draft → pending → (approved | rejected)
@@ -177,7 +177,7 @@ draft → pending → (approved | rejected)
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Frontend (`client/trackit`)
 | Technology | Purpose |
@@ -222,7 +222,7 @@ draft → pending → (approved | rejected)
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 TrackIt/                              # Root
@@ -279,7 +279,7 @@ TrackIt/                              # Root
 
 ---
 
-## 🗄️ Database Schema
+##  Database Schema
 
 The backend uses **MongoDB** with **Mongoose** for schema definition. The three core models map directly to the files in `server/models/`.
 
@@ -340,7 +340,7 @@ The backend uses **MongoDB** with **Mongoose** for schema definition. The three 
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -410,7 +410,7 @@ The app will be available at:
 
 ---
 
-## 🔐 Environment Variables
+##  Environment Variables
 
 Create a `.env` file inside `server/`. The variables are loaded via `server/config/env.js`. Use `.env.example` as a reference.
 
@@ -441,7 +441,7 @@ CLIENT_URL=http://localhost:3000
 
 ---
 
-## 📡 API Reference
+##  API Reference
 
 ### Authentication
 
@@ -487,7 +487,7 @@ CLIENT_URL=http://localhost:3000
 
 ---
 
-## ⏰ Reminder System
+##  Reminder System
 
 The reminder engine runs as a background cron job that checks the database every minute for upcoming deadlines.
 
@@ -523,7 +523,7 @@ Reminders are generated automatically when a student saves or applies to an even
 
 ---
 
-## 🤖 Scam Detection Engine
+##  Scam Detection Engine
 
 Every event submission passes through an automated screening layer before it reaches the admin moderation queue.
 
@@ -542,11 +542,11 @@ Every event submission passes through an automated screening layer before it rea
 - Admin can then approve (overriding the flag) or reject the event
 - Clean events proceed normally to the standard `pending` queue
 
-> ⚠️ **Note:** The scam detection engine is currently rule-based. ML-based classification is planned for a future release.
+>  **Note:** The scam detection engine is currently rule-based. ML-based classification is planned for a future release.
 
 ---
 
-## 🔔 Notification Channels
+##  Notification Channels
 
 TrackIt delivers deadline reminders and event updates through three channels:
 
@@ -561,7 +561,7 @@ Notifications are stored in the database and surfaced in the `NotificationBell` 
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please read the guidelines below before opening a pull request.
 
@@ -600,7 +600,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ---
 
-## 🗺️ Roadmap
+##  Roadmap
 
 - [ ] ML-based scam detection model
 - [ ] OAuth login (Google, GitHub)
@@ -612,7 +612,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ---
 
-## 📄 License
+##  License
 
 This project is licensed under the [MIT License](LICENSE).
 
@@ -620,7 +620,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 <div align="center">
 
-Built with ❤️ for students who deserve to know about every opportunity.
+Built with  for students who deserve to know about every opportunity.
 
 [Report a Bug](https://github.com/Bolice1/TrackIt/issues) · [Request a Feature](https://github.com/Bolice1/TrackIt/issues) · [Contribute](https://github.com/Bolice1/TrackIt/pulls)
 

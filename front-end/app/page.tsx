@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { OpportunityCard } from "@/components/opportunity-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -76,9 +74,7 @@ export default function HomePage() {
   )
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-
+    <>
       <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <Badge variant="secondary" className="mb-4">
@@ -103,13 +99,27 @@ export default function HomePage() {
 
         <div className="max-w-4xl mx-auto mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
-            { label: "Active Opportunities", value: stats.active_opportunities.toString() },
-            { label: "Students Registered", value: stats.registered_users.toString() },
-            { label: "Applications Submitted", value: stats.applications_submitted.toString() },
-            { label: "Success Rate", value: `${stats.success_rate}%` },
+            { 
+              label: stats.active_opportunities === 1 ? "Active Opportunity" : "Active Opportunities", 
+              value: loading ? "..." : stats.active_opportunities.toString() 
+            },
+            { 
+              label: stats.registered_users === 1 ? "Student Registered" : "Students Registered", 
+              value: loading ? "..." : stats.registered_users.toString() 
+            },
+            { 
+              label: stats.applications_submitted === 1 ? "Application Submitted" : "Applications Submitted", 
+              value: loading ? "..." : stats.applications_submitted.toString() 
+            },
+            { 
+              label: "Success Rate", 
+              value: loading ? "..." : `${stats.success_rate}%` 
+            },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary">{stat.value}</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary min-h-[1.2em]">
+                {stat.value}
+              </div>
               <div className="text-sm text-muted-foreground">{stat.label}</div>
             </div>
           ))}
@@ -214,8 +224,6 @@ export default function HomePage() {
           )}
         </div>
       </section>
-
-      <Footer />
-    </div>
+    </>
   )
 }

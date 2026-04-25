@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ModeToggle } from "@/components/mode-toggle"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,7 +79,7 @@ export function DashboardSidebar({ profile }: DashboardSidebarProps) {
         collapsed ? "w-[70px]" : "w-64"
       )}
     >
-      {/* Header */}
+      {/* Sidebar Toggle & Branding */}
       <div className="p-4 border-b flex items-center justify-between">
         <Link href="/" className={cn("transition-opacity", collapsed && "opacity-0 w-0 overflow-hidden")}>
           <Logo size="sm" />
@@ -128,6 +129,12 @@ export function DashboardSidebar({ profile }: DashboardSidebarProps) {
           )
         })}
       </nav>
+
+      {/* Theme Toggle */}
+      <div className={cn("px-4 py-2 flex items-center", collapsed ? "justify-center" : "justify-between")}>
+        {!collapsed && <span className="text-xs font-medium text-muted-foreground">Appearance</span>}
+        <ModeToggle />
+      </div>
 
       {/* User Menu */}
       <div className="p-4 border-t">
