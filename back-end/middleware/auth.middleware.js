@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { env } from "../config/env.js";
 
 const getToken = (req) => {
   const authHeader = req.headers.authorization;
@@ -22,7 +23,7 @@ export const authorizeUser = (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || process.env.SECRET_KEY);
+    const decoded = jwt.verify(token, env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (error) {
@@ -39,7 +40,7 @@ export const optionalAuth = (req, res, next) => {
       return next();
     }
 
-    req.user = jwt.verify(token, process.env.JWT_SECRET || process.env.SECRET_KEY);
+    req.user = jwt.verify(token, env.JWT_SECRET);
     next();
   } catch (error) {
     req.user = null;

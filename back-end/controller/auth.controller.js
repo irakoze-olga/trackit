@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { env } from "../config/env.js";
+import { sendWelcomeEmail } from "./email.controller.js";
 
 export const signup = async (req, res, next) => {
   try {
@@ -44,7 +46,13 @@ export const signup = async (req, res, next) => {
       bio,
       avatarUrl,
     });
+    // let us send the welcome email
+    try {
+      sendWelcomeEmail(email, firstname)
 
+    } catch (error) {
+      return res.status(5000).json({ msg: "error occurred while sending the email" })
+    }
     res.status(201).json({
       message: "User created successfully",
       user: {
@@ -85,11 +93,12 @@ export const login = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: existingUser._id.toString(), role: existingUser.role, email: existingUser.email },
-      process.env.JWT_SECRET || process.env.SECRET_KEY,
-      { expiresIn: process.env.JWT_EXPIRES_IN || process.env.jwtExpiresIn || "7d" }
+      env.JWT_SECRET,
+      { expiresIn: env.JWT_EXPIRES_IN }
     );
+    if(!token) return res.status(500).json({msg:"something went wrong"})
 
-    const isProduction = process.env.NODE_ENV === "production";
+    const isProduction = env.NODE_ENV === "production";
 
     res.cookie("token", token, {
       httpOnly: true,
