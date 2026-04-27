@@ -17,8 +17,8 @@ export const env = {
 
 };
 
- let us validate for missing values 
- if(!PORT||!DB_URI||!JWT_EXPIRES_IN||!JWT_SECRET||!NODE_ENV||!CLIENT_URL||!EMAIL||!EMAIL_PASSWORD||!EMAIL_PORT||!EMAIL_SECURE||!EMAIL_SERVICE){
-     console.log("Some env values are missing\n double check your env file");
-     process.exit(1)
-}
+//  //let us validate for missing values 
+//  if(!PORT||!DB_URI||!JWT_EXPIRES_IN||!JWT_SECRET||!NODE_ENV||!CLIENT_URL||!EMAIL||!EMAIL_PASSWORD||!EMAIL_PORT||!EMAIL_SECURE||!EMAIL_SERVICE){
+//      console.log("Some env values are missing\n double check your env file");
+//      process.exit(1)
+// }
