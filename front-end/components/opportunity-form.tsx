@@ -23,6 +23,7 @@ import type { Opportunity, OpportunityCategory } from "@/lib/types"
 import { AlertCircle, ArrowLeft, Save, Send } from "lucide-react"
 import { toast } from "sonner"
 import { createOpportunity, updateOpportunity } from "@/lib/backend-api"
+import { getStoredUser } from "@/lib/backend-auth"
 
 interface OpportunityFormProps {
   opportunity?: Opportunity
@@ -113,7 +114,8 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
         return
     }
 
-    router.push("/dashboard/teacher/opportunities")
+    const storedUser = getStoredUser()
+    router.push(storedUser?.role === "student" ? "/dashboard/student" : "/dashboard/teacher/opportunities")
     router.refresh()
   }
 

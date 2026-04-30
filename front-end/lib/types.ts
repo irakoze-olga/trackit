@@ -1,4 +1,4 @@
-export type UserRole = 'student' | 'teacher'
+export type UserRole = 'student' | 'teacher' | 'admin' | 'maintainer'
 
 export type OpportunityCategory = 
   | 'scholarship' 
@@ -29,6 +29,11 @@ export interface Profile {
   field_of_study?: string
   bio?: string
   avatar_url?: string
+  githubUsername?: string
+  linkedinUrl?: string
+  slackUserId?: string
+  isActive?: boolean
+  mustChangePassword?: boolean
   created_at: string
   updated_at: string
 }
@@ -46,6 +51,14 @@ export interface Opportunity {
   requirements?: string
   benefits?: string
   application_url?: string
+  image_url?: string
+  preview_title?: string
+  preview_description?: string
+  application_count?: number
+  interested_count?: number
+  rating_count?: number
+  average_rating?: number
+  popularity_score?: number
   posted_by?: string
   status: OpportunityStatus
   views_count: number
@@ -118,7 +131,7 @@ export const APPLICATION_STATUS_COLORS: Record<ApplicationStatus, string> = {
 }
 
 // Notification Types
-export type NotificationType = 'deadline_reminder' | 'status_update' | 'application_received' | 'opportunity_verified'
+export type NotificationType = 'deadline_reminder' | 'status_update' | 'application_received' | 'opportunity_verified' | 'opportunity_posted' | 'security_alert'
 
 export interface NotificationPreferences {
   id: string
@@ -142,21 +155,6 @@ export interface Notification {
   created_at: string
   // Joined data
   opportunity?: Opportunity
-}
-
-// Verification Types
-export type VerificationStatus = 'unverified' | 'verified' | 'flagged'
-
-export interface Verification {
-  id: string
-  opportunity_id: string
-  teacher_id: string
-  status: VerificationStatus
-  notes?: string
-  created_at: string
-  updated_at: string
-  // Joined data
-  teacher?: Profile
 }
 
 // Student Profile Types

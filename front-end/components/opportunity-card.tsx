@@ -13,7 +13,9 @@ import {
   Bookmark, 
   BookmarkCheck,
   ExternalLink,
-  Clock
+  Clock,
+  Star,
+  Users,
 } from "lucide-react"
 import { 
   type Opportunity, 
@@ -47,6 +49,15 @@ export function OpportunityCard({
       "group transition-all duration-200 hover:shadow-md hover:border-primary/30",
       isExpired && "opacity-60"
     )}>
+      {opportunity.image_url && (
+        <Link href={`/opportunities/${opportunity.id}`} className="block relative h-40 overflow-hidden rounded-t-lg bg-muted">
+          <img
+            src={opportunity.image_url}
+            alt=""
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </Link>
+      )}
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
@@ -101,8 +112,20 @@ export function OpportunityCard({
         </div>
         
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-          {opportunity.description}
+          {opportunity.preview_description || opportunity.description}
         </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1">
+            <Users className="h-3.5 w-3.5" />
+            {(opportunity.application_count || 0) + (opportunity.interested_count || 0)} interested/applied
+          </span>
+          {!!opportunity.average_rating && (
+            <span className="inline-flex items-center gap-1">
+              <Star className="h-3.5 w-3.5 fill-current text-amber-500" />
+              {opportunity.average_rating.toFixed(1)}
+            </span>
+          )}
+        </div>
       </CardContent>
       
       <CardFooter className="pt-3 border-t flex flex-col gap-3">

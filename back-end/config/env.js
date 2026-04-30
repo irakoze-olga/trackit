@@ -32,4 +32,6 @@ export const env = {
     EMAIL_SERVICE: process.env.EMAIL_SERVICE,
     EMAIL_PORT: process.env.EMAIL_PORT,
     EMAIL_SECURE: parseBoolean(process.env.EMAIL_SECURE),
+    SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
+    SYSTEM_LOGIN_URL: process.env.SYSTEM_LOGIN_URL || `${process.env.CLIENT_URL}/auth/login`,
 };

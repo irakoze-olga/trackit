@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
+import { DashboardShell } from "@/components/dashboard-shell"
 import { ProfileSettings } from "@/components/profile-settings"
 import type { Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -40,11 +40,8 @@ export default function StudentSettingsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar profile={profile} />
-      <main className="flex-1 overflow-auto">
-        <ProfileSettings profile={profile} />
-      </main>
-    </div>
+    <DashboardShell profile={profile} title="Settings">
+      <ProfileSettings profile={profile} />
+    </DashboardShell>
   )
 }

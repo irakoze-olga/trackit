@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
+import { DashboardShell } from "@/components/dashboard-shell"
 import { StudentOverview } from "@/components/student-overview"
 import type { Application, Opportunity, Profile } from "@/lib/types"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -76,16 +76,13 @@ export default function StudentDashboardPage() {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar profile={data.profile} />
-      <main className="flex-1 overflow-auto">
-        <StudentOverview
-          profile={data.profile}
-          applications={data.applications}
-          recommended={data.recommended}
-          stats={data.stats}
-        />
-      </main>
-    </div>
+    <DashboardShell profile={data.profile} title="Student dashboard">
+      <StudentOverview
+        profile={data.profile}
+        applications={data.applications}
+        recommended={data.recommended}
+        stats={data.stats}
+      />
+    </DashboardShell>
   )
 }

@@ -95,8 +95,28 @@ const eventSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["draft", "active", "closed"],
-      default: "active",
+      enum: ["draft", "pending_approval", "active", "closed", "rejected"],
+      default: "pending_approval",
+    },
+    approvalStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+      index: true,
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      default: null,
+    },
+    approvedAt: {
+      type: Date,
+      default: null,
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      default: "",
     },
     viewsCount: {
       type: Number,
@@ -107,6 +127,16 @@ const eventSchema = new mongoose.Schema(
       type: String,
       default:
         "https://res.cloudinary.com/dsgj2kl7r/image/upload/f_auto,q_auto/96cabaa4-9b9c-4738-8728-f80d4872675d_g97jr2",
+    },
+    previewTitle: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    previewDescription: {
+      type: String,
+      trim: true,
+      default: "",
     },
     isFeatured: {
       type: Boolean,
@@ -158,9 +188,9 @@ eventSchema.pre("validate", function validateEvent() {
 
   this.tags = [...new Set((this.tags || []).map((tag) => String(tag).trim()).filter(Boolean))];
 
-  if (this.status !== "draft" && this.deadline && this.deadline < new Date()) {
-    this.status = "closed";
-  }
+    if (!["draft", "pending_approval"].includes(this.status) && this.deadline && this.deadline < new Date()) {
+      this.status = "closed";
+    }
 });
 
 const Event = mongoose.model("event", eventSchema);

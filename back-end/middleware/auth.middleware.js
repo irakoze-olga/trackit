@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import { env } from "../config/env.js";
 
 const getToken = (req) => {
@@ -24,6 +25,9 @@ export const authorizeUser = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, env.JWT_SECRET);
+    if (!decoded?.id || !mongoose.Types.ObjectId.isValid(decoded.id)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     req.user = decoded;
     next();
   } catch (error) {
@@ -40,7 +44,12 @@ export const optionalAuth = (req, res, next) => {
       return next();
     }
 
-    req.user = jwt.verify(token, env.JWT_SECRET);
+    const decoded = jwt.verify(token, env.JWT_SECRET);
+    if (!decoded?.id || !mongoose.Types.ObjectId.isValid(decoded.id)) {
+      req.user = null;
+      return next();
+    }
+    req.user = decoded;
     next();
   } catch (error) {
     req.user = null;
@@ -58,6 +67,9 @@ export const authorizeAdmin = (req, res, next) => {
       }
 
       req.user = jwt.verify(token, env.JWT_SECRET);
+    }
+    if (!req.user?.id || !mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     if (req.user.role !== "admin") {
@@ -80,6 +92,9 @@ export const authorizeRoles = (...roles) => (req, res, next) => {
       }
 
       req.user = jwt.verify(token, env.JWT_SECRET);
+    }
+    if (!req.user?.id || !mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     if (!roles.includes(req.user.role)) {

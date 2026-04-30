@@ -148,8 +148,8 @@ export const getPublicMetrics = async (req, res, next) => {
     const now = new Date();
     const [activeOpportunities, registeredUsers, applications, acceptedApplications] =
       await Promise.all([
-        Event.countDocuments({ status: "active", deadline: { $gte: now } }),
-        User.countDocuments({ role: { $ne: "admin" } }),
+        Event.countDocuments({ status: "active", approvalStatus: "approved", deadline: { $gte: now } }),
+        User.countDocuments({ role: "student", isActive: true }),
         Application.countDocuments(),
         Application.countDocuments({ status: "accepted" }),
       ]);

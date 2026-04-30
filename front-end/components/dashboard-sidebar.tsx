@@ -28,12 +28,14 @@ import {
   BarChart3,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
 } from "lucide-react"
-import { useState } from "react"
 import { clearAuthSession } from "@/lib/backend-auth"
 
 interface DashboardSidebarProps {
   profile: Profile
+  collapsed?: boolean
+  onCollapsedChange?: (collapsed: boolean) => void
 }
 
 const studentLinks = [
@@ -52,12 +54,32 @@ const teacherLinks = [
   { href: "/dashboard/teacher/settings", label: "Settings", icon: Settings },
 ]
 
-export function DashboardSidebar({ profile }: DashboardSidebarProps) {
+const adminLinks = [
+  { href: "/dashboard/admin", label: "Control center", icon: ShieldCheck },
+]
+
+const maintainerLinks = [
+  { href: "/dashboard/maintainer", label: "Overview", icon: LayoutDashboard },
+  { href: "/dashboard/teacher/opportunities", label: "Posted Work", icon: FileText },
+  { href: "/dashboard/teacher/settings", label: "Settings", icon: Settings },
+]
+
+export function DashboardSidebar({
+  profile,
+  collapsed = false,
+  onCollapsedChange,
+}: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const [collapsed, setCollapsed] = useState(false)
 
-  const links = profile.role === "teacher" ? teacherLinks : studentLinks
+  const links =
+    profile.role === "admin"
+      ? adminLinks
+      : profile.role === "maintainer"
+        ? maintainerLinks
+        : profile.role === "teacher"
+          ? teacherLinks
+          : studentLinks
 
   async function handleSignOut() {
     clearAuthSession()
@@ -87,7 +109,7 @@ export function DashboardSidebar({ profile }: DashboardSidebarProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() => onCollapsedChange?.(!collapsed)}
           className="shrink-0"
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -96,14 +118,14 @@ export function DashboardSidebar({ profile }: DashboardSidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1">
-        {profile.role === "teacher" && (
+        {profile.role !== "admin" && (
           <Button
             asChild
             className={cn("w-full mb-4", collapsed ? "px-2" : "")}
           >
             <Link href="/dashboard/teacher/opportunities/new">
               <Plus className="h-4 w-4" />
-              {!collapsed && <span className="ml-2">Post Opportunity</span>}
+              {!collapsed && <span className="ml-2">Post</span>}
             </Link>
           </Button>
         )}

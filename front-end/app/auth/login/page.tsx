@@ -28,7 +28,11 @@ export default function LoginPage() {
     try {
       const user = await loginWithBackend(email, password)
 
-      if (user.role === "teacher") {
+      if (user.role === "admin") {
+        router.push("/dashboard/admin")
+      } else if (user.role === "maintainer") {
+        router.push("/dashboard/maintainer")
+      } else if (user.role === "teacher") {
         router.push("/dashboard/teacher")
       } else {
         router.push("/dashboard/student")
@@ -101,10 +105,7 @@ export default function LoginPage() {
             </Button>
             
             <p className="text-sm text-muted-foreground text-center">
-              Don&apos;t have an account?{" "}
-              <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
-                Sign up
-              </Link>
+              RCA TrackIt accounts are issued by the platform admin.
             </p>
             
             <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">

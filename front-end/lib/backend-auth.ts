@@ -3,7 +3,7 @@ const USER_KEY = "trackit_auth_user"
 
 type StoredUser = {
   id: string
-  role: "student" | "teacher"
+  role: "student" | "teacher" | "admin" | "maintainer"
   email: string
 }
 

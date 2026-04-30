@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { signup,login, me } from "../controller/auth.controller.js";
+import { registerTeacherWithInvite, login, me } from "../controller/auth.controller.js";
 import { authorizeUser } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validate.middleware.ts";
+import { loginSchema, teacherInviteRegistrationSchema } from "../validations/auth.validation.ts";
 
 const authRouter=Router();
 
-authRouter.post("/signup",signup)
-          .post("/login",login)
+authRouter.post("/teacher-invite", validate(teacherInviteRegistrationSchema), registerTeacherWithInvite)
+          .post("/login", validate(loginSchema), login)
           .get("/me", authorizeUser, me)
 
 export default authRouter;

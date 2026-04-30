@@ -1,8 +1,8 @@
 const errorMiddleware = (err, req, res, next) => {
-  let error = { ...err }
-  error.message = err.message
+  let error = { ...err };
+  error.message = err.message;
 
-  console.error(err)
+  console.error(err);
 
   // Invalid MongoDB ObjectId
   if (err.name === 'CastError') {
@@ -28,9 +28,8 @@ const errorMiddleware = (err, req, res, next) => {
 
   res.status(error.statusCode || 500).json({
     success: false,
-    error: error.message || 'Internal Server Error',
-
-  })
-}
+    message: error.message || "Internal Server Error",
+  });
+};
 
 export default errorMiddleware

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
+import { DashboardShell } from "@/components/dashboard-shell"
 import { TeacherApplications } from "@/components/teacher-applications"
 import type { Application, Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -36,7 +36,7 @@ function TeacherApplicationsPageContent() {
       return
     }
 
-    if (storedUser.role !== "teacher") {
+    if (storedUser.role !== "teacher" && storedUser.role !== "maintainer") {
       router.replace("/dashboard/student")
       return
     }
@@ -55,16 +55,13 @@ function TeacherApplicationsPageContent() {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar profile={data.profile} />
-      <main className="flex-1 overflow-auto">
-        <TeacherApplications
-          applications={data.applications}
-          opportunities={data.opportunities}
-          currentFilter={filter}
-        />
-      </main>
-    </div>
+    <DashboardShell profile={data.profile} title="Applications">
+      <TeacherApplications
+        applications={data.applications}
+        opportunities={data.opportunities}
+        currentFilter={filter}
+      />
+    </DashboardShell>
   )
 }
 

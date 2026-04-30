@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 interface LogoProps {
   className?: string
@@ -22,27 +23,10 @@ export function Logo({ className, size = "md", showText = true }: LogoProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className={cn(
-        "relative flex items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/25",
+        "relative overflow-hidden rounded-xl border bg-background shadow-sm",
         sizeClasses[size]
       )}>
-        {/* Target/Track icon */}
-        <svg 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          className="w-[60%] h-[60%] text-primary-foreground"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="12" r="6" />
-          <circle cx="12" cy="12" r="2" fill="currentColor" />
-          <path d="M12 2v4" />
-          <path d="M12 18v4" />
-          <path d="M2 12h4" />
-          <path d="M18 12h4" />
-        </svg>
+        <Image src="/icon.svg" alt="TrackIt" fill className="object-cover p-1" sizes="56px" />
       </div>
       {showText && (
         <span className={cn(

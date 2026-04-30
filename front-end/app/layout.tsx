@@ -2,14 +2,11 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/components/theme-provider'
-import { Header } from '@/components/header'
-import { Footer } from '@/components/footer'
 import './globals.css'
 
 export const metadata: Metadata = {
   title: 'TrackIt - Discover & Track Opportunities',
   description: 'Find scholarships, internships, jobs, competitions, and more. Track your applications and never miss a deadline.',
-  generator: 'v0.app',
   keywords: ['opportunities', 'scholarships', 'internships', 'jobs', 'competitions', 'students', 'career'],
   icons: {
     icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
@@ -35,17 +32,11 @@ export default function RootLayout({
       <body className="font-sans antialiased min-h-screen" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          {children}
           <Toaster position="top-right" richColors />
           {process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS === 'true' && <Analytics />}
         </ThemeProvider>

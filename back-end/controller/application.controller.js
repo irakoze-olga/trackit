@@ -1,6 +1,7 @@
 import Application from "../models/application.model.js";
 import Event from "../models/event.model.js";
-import Notification from "../models/notification.model.js";
+import User from "../models/user.model.js";
+import { notifyUser } from "../services/notification.service.ts";
 
 const populateApplication = (query) =>
   query
@@ -71,7 +72,15 @@ export const createApplication = async (req, res, next) => {
       return res.status(404).json({ message: "Opportunity not found" });
     }
 
-    const applicantId = req.user.role === "student" ? req.user.id : applicant;
+    if (event.status !== "active" || event.approvalStatus !== "approved") {
+      return res.status(403).json({ message: "This opportunity is waiting for admin approval" });
+    }
+
+    if (req.user.role !== "student") {
+      return res.status(403).json({ message: "Only students can apply to opportunities" });
+    }
+
+    const applicantId = req.user.id;
 
     if (!applicantId) {
       return res.status(400).json({ message: "Applicant is required" });
@@ -92,13 +101,15 @@ export const createApplication = async (req, res, next) => {
     );
 
     if (String(event.postedBy) !== String(applicantId)) {
-      await Notification.create({
-        user: event.postedBy,
-        type: "application_received",
-        title: "New application received",
-        message: `A new application was submitted for "${event.title}".`,
-        event: event._id,
-      });
+      const owner = await User.findById(event.postedBy).select("firstname lastname email slackUserId");
+      if (owner) {
+        await notifyUser(owner, {
+          type: "application_received",
+          title: "New application received",
+          message: `A new application was submitted for "${event.title}".`,
+          eventId: String(event._id),
+        });
+      }
     }
 
     return res.status(201).json({
@@ -176,14 +187,17 @@ export const updateApplicationById = async (req, res, next) => {
       req.body.status !== previousStatus
     ) {
       const relatedEvent = await Event.findById(application.event).select("title");
-
-      await Notification.create({
-        user: application.applicant,
-        type: "status_update",
-        title: "Application status updated",
-        message: `Your application for "${relatedEvent?.title || "this opportunity"}" is now ${req.body.status.replaceAll("_", " ")}.`,
-        event: application.event,
-      });
+      const applicantUser = await User.findById(application.applicant).select(
+        "firstname lastname email slackUserId"
+      );
+      if (applicantUser) {
+        await notifyUser(applicantUser, {
+          type: "status_update",
+          title: "Application status updated",
+          message: `Your application for "${relatedEvent?.title || "this opportunity"}" is now ${String(req.body.status).replaceAll("_", " ")}.`,
+          eventId: String(application.event),
+        });
+      }
     }
 
     return res.status(200).json({

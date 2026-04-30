@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
+import { DashboardShell } from "@/components/dashboard-shell"
 import { StudentApplications } from "@/components/student-applications"
 import type { Application, Opportunity, Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -43,11 +43,8 @@ export default function StudentApplicationsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar profile={data.profile} />
-      <main className="flex-1 overflow-auto">
-        <StudentApplications applications={data.applications} />
-      </main>
-    </div>
+    <DashboardShell profile={data.profile} title="Applications">
+      <StudentApplications applications={data.applications} />
+    </DashboardShell>
   )
 }
