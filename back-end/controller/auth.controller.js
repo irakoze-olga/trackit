@@ -26,11 +26,11 @@ export const signup = async (req, res, next) => {
       return res.status(400).json({ message: "Age is required for students" });
     }
     if (role === "admin") {
-      return res.status(400).json({ message: "Unauthorized to create admin" });
+      return res.status(400).json({ message: "restricted zone" });
     }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).json({ message: "Email taken" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -51,10 +51,10 @@ export const signup = async (req, res, next) => {
       sendWelcomeEmail(email, firstname)
 
     } catch (error) {
-      return res.status(5000).json({ msg: "error occurred while sending the email" })
+      return res.status(5000).json({ msg: "something went wrong!" })
     }
     res.status(201).json({
-      message: "User created successfully",
+      message: "account created successfully",
       user: {
         id: user._id,
         firstname: user.firstname,
@@ -78,17 +78,17 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res.status(400).json({ message:"All the fields are required!" });
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Account doesn't exist!" });
     }
 
     const comparePassword = await bcrypt.compare(password, existingUser.password);
     if (!comparePassword) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = jwt.sign(
@@ -108,7 +108,7 @@ export const login = async (req, res, next) => {
     });
 
     return res.status(200).json({
-      message: "Login successful",
+      message: "You are in!",
       token,
       user: {
         id: existingUser._id,

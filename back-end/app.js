@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 connectToDatabase();
 
 app.get("/", (req, res) => {
-  res.send("TrackIt API is running");
+  res.send("TrackIt....");
 });
 
 app.use("/api/v1/auth", authRouter);
@@ -59,6 +59,8 @@ app.use("/api/v1/notifications", authorizeUser, notificationRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`server is running on port ${process.env.PORT || 3000}`);
+app.listen(env.PORT || 3000, () => {
+  console.log(`do not look  at me${env.PORT} broooo...`);
 });
+
+

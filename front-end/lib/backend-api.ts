@@ -16,7 +16,7 @@ import {
   setAuthSession,
 } from "@/lib/backend-auth"
 
-const DEFAULT_API_BASE_URL = "http://localhost:3000/api/v1"
+const DEFAULT_API_BASE_URL = "http://10.12.72.100:3000"
 
 function normalizeApiBaseUrl(rawValue?: string) {
   if (!rawValue) {
