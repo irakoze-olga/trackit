@@ -1,16 +1,15 @@
 import cron from "node-cron";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
 import Application from "../models/application.model.js";
 import { env } from "../config/env.js";
-
-dotenv.config();
 
 const canSendEmail = Boolean(env.EMAIL && env.EMAIL_PASSWORD);
 
 const transporter = canSendEmail
   ? nodemailer.createTransport({
-    service: "gmail",
+    host: env.EMAIL_SERVICE,
+    port: env.EMAIL_PORT ? Number(env.EMAIL_PORT) : undefined,
+    secure: env.EMAIL_SECURE,
     auth: {
       user: env.EMAIL,
       pass: env.EMAIL_PASSWORD,
@@ -62,8 +61,12 @@ cron.schedule(
 );
 
 export const sendReminder = async (application) => {
+  if (!transporter) {
+    return;
+  }
+
   await transporter.sendMail({
-    from: process.env.EMAIL,
+    from: `TrackIt <${env.EMAIL}>`,
     to: application.applicant.email,
     subject: `Reminder: ${application.event.title} deadline is tomorrow`,
     html: `
@@ -79,9 +82,12 @@ export const sendReminder = async (application) => {
 };
 
 export const sendWelcomeEmail = async (to, name) => {
+  if (!transporter) {
+    return;
+  }
 
   const mailOptions = {
-    from: `TrackIt<${env.EMAIL}>`,
+    from: `TrackIt <${env.EMAIL}>`,
     to,
     subject: "Welcome to TrackIt",
     html: `
@@ -154,5 +160,3 @@ export const sendWelcomeEmail = async (to, name) => {
   }
 
 }
-
-

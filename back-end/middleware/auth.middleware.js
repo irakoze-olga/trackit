@@ -57,7 +57,7 @@ export const authorizeAdmin = (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      req.user = jwt.verify(token, process.env.JWT_SECRET || process.env.SECRET_KEY);
+      req.user = jwt.verify(token, env.JWT_SECRET);
     }
 
     if (req.user.role !== "admin") {
@@ -79,7 +79,7 @@ export const authorizeRoles = (...roles) => (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      req.user = jwt.verify(token, process.env.JWT_SECRET || process.env.SECRET_KEY);
+      req.user = jwt.verify(token, env.JWT_SECRET);
     }
 
     if (!roles.includes(req.user.role)) {

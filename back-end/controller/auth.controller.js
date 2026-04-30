@@ -46,12 +46,10 @@ export const signup = async (req, res, next) => {
       bio,
       avatarUrl,
     });
-    // let us send the welcome email
     try {
-      sendWelcomeEmail(email, firstname)
-
+      await sendWelcomeEmail(email, firstname);
     } catch (error) {
-      return res.status(5000).json({ msg: "something went wrong!" })
+      console.error("Welcome email failed", error);
     }
     res.status(201).json({
       message: "account created successfully",

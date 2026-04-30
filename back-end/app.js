@@ -1,5 +1,4 @@
 import express from 'express';
-import { config } from 'dotenv';
 import cookieParser from 'cookie-parser';
 import connectToDatabase from './config/database.js';
 import authRouter from './routes/auth.route.js';
@@ -14,8 +13,6 @@ import { authorizeUser } from './middleware/auth.middleware.js';
 import { env } from './config/env.js';
 import './controller/event.cleanup.js';
 import "./controller/email.controller.js";
-
-config();
 
 const app = express();
 
@@ -47,7 +44,11 @@ app.use((req, res, next) => {
 connectToDatabase();
 
 app.get("/", (req, res) => {
-  res.send("TrackIt....");
+  res.json({ name: "TrackIt API", status: "ok" });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", environment: env.NODE_ENV });
 });
 
 app.use("/api/v1/auth", authRouter);
@@ -59,8 +60,6 @@ app.use("/api/v1/notifications", authorizeUser, notificationRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 app.use(errorMiddleware);
 
-app.listen(env.PORT || 3000, () => {
-  console.log(`do not look  at me${env.PORT} broooo...`);
+app.listen(env.PORT, () => {
+  console.log(`TrackIt API listening on port ${env.PORT}`);
 });
-
-

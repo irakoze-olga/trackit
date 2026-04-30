@@ -3,10 +3,7 @@ module.exports = {
     {
       name: "frontend",
       script: "npm",
-      args: "start",
-      env: {
-        PORT: 3001
-      }
+      args: "start"
     }
   ]
 }

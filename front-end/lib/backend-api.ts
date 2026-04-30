@@ -16,8 +16,6 @@ import {
   setAuthSession,
 } from "@/lib/backend-auth"
 
-const DEFAULT_API_BASE_URL = "http://10.12.72.100:3000"
-
 function normalizeApiBaseUrl(rawValue?: string) {
   if (!rawValue) {
     return null
@@ -42,9 +40,11 @@ function normalizeApiBaseUrl(rawValue?: string) {
   return `${withoutTrailingSlash}/api/v1`
 }
 
-const API_BASE_URL =
-  normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URI) ||
-  DEFAULT_API_BASE_URL
+const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL)
+
+if (!API_BASE_URL) {
+  throw new Error("Missing NEXT_PUBLIC_API_URL. Set it in front-end/.env or your deployment environment.")
+}
 
 type BackendUser = {
   _id?: string
