@@ -1,13 +1,5 @@
 # TrackIt
 
-<<<<<<< HEAD
-TrackIt helps students discover opportunities, save them, apply, and track application progress from one place.
-
-## Project Structure
-
-- `front-end/` - Next.js web application.
-- `back-end/` - Express and MongoDB API.
-=======
 TrackIt helps Rwanda Coding Academy students discover approved opportunities, save them, apply, rate them, and receive deadline reminders from one place.
 
 ## Project Structure
@@ -20,7 +12,6 @@ TrackIt helps Rwanda Coding Academy students discover approved opportunities, sa
 - `back-end/` - Express and MongoDB API.
 - `resources/images` - profile and opportunity images served by the API.
 - `resources/documents` - large documents such as PDFs.
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 - `docker-compose.yml` - Production-style local deployment for both services.
 
 ## Environment
@@ -39,11 +30,6 @@ Required backend variables:
 PORT=6487
 DB_URI=mongodb://mongo:27017/trackit
 JWT_SECRET=replace-with-a-long-random-secret
-<<<<<<< HEAD
-JWT_EXPIRES_IN=1d
-NODE_ENV=development
-CLIENT_URL=http://localhost:3000
-=======
 JWT_EXPIRES_IN=7d
 NODE_ENV=development
 CLIENT_URL=http://localhost:3000
@@ -54,7 +40,6 @@ EMAIL_SERVICE=smtp.gmail.com
 EMAIL_PORT=465
 EMAIL_SECURE=true
 SLACK_BOT_TOKEN=
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 ```
 
 Required frontend variable:
@@ -83,8 +68,6 @@ npm run dev
 
 The frontend expects the backend at `NEXT_PUBLIC_API_URL`. The backend allows browser requests from `CLIENT_URL`.
 
-<<<<<<< HEAD
-=======
 ## RCA Workflows
 
 - Only the existing admin account manages users from `/dashboard/admin`.
@@ -96,7 +79,6 @@ The frontend expects the backend at `NEXT_PUBLIC_API_URL`. The backend allows br
 - Account removal is implemented as deactivation so historical analytics remain intact.
 - Maintainer profile images and large resources can be stored under `resources/images` and served by the API from `/resources`.
 
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 ## Docker
 
 Build and start both services:

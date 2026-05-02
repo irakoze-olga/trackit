@@ -237,13 +237,6 @@ export function ExploreOpportunities({ savedIds: initialSavedIds, appliedIds, us
           })}
         </div>
       ) : (
-<<<<<<< HEAD
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Show sample opportunities when no data is available */}
-          {[1, 2, 3, 4, 5, 6].map((index) => (
-            <div key={index} className="h-64 bg-muted animate-pulse rounded-lg" />
-          ))}
-=======
         <div className="text-center py-16">
           <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">No opportunities found</h3>
@@ -261,7 +254,6 @@ export function ExploreOpportunities({ savedIds: initialSavedIds, appliedIds, us
           >
             Clear Filters
           </Button>
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
         </div>
       )}
     </div>

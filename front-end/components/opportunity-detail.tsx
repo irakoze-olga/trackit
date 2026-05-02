@@ -35,17 +35,11 @@ import {
   Send,
   Eye,
   Globe,
-<<<<<<< HEAD
-} from "lucide-react"
-import { toast } from "sonner"
-import { createApplication, saveOpportunity, unsaveOpportunity } from "@/lib/backend-api"
-=======
   Star,
   Heart,
 } from "lucide-react"
 import { toast } from "sonner"
 import { createApplication, saveOpportunity, saveOpportunityEngagement, unsaveOpportunity } from "@/lib/backend-api"
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
 interface OpportunityDetailProps {
   opportunity: Opportunity
@@ -67,11 +61,8 @@ export function OpportunityDetail({
   const [saving, setSaving] = useState(false)
   const [applying, setApplying] = useState(false)
   const [coverLetter, setCoverLetter] = useState("")
-<<<<<<< HEAD
-=======
   const [interested, setInterested] = useState(false)
   const [rating, setRating] = useState(0)
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   const [dialogOpen, setDialogOpen] = useState(false)
   const router = useRouter()
 
@@ -134,8 +125,6 @@ export function OpportunityDetail({
     setApplying(false)
   }
 
-<<<<<<< HEAD
-=======
   async function handleEngagement(next: { interested?: boolean; rating?: number }) {
     if (!userProfile) {
       router.push("/auth/login")
@@ -156,7 +145,6 @@ export function OpportunityDetail({
     }
   }
 
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link
@@ -171,14 +159,11 @@ export function OpportunityDetail({
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
-<<<<<<< HEAD
-=======
             {opportunity.image_url && (
               <div className="relative h-64 overflow-hidden rounded-t-lg bg-muted">
                 <img src={opportunity.image_url} alt="" className="h-full w-full object-cover" />
               </div>
             )}
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <Badge variant="secondary" className="capitalize">
@@ -355,8 +340,6 @@ export function OpportunityDetail({
                   </a>
                 </Button>
               )}
-<<<<<<< HEAD
-=======
 
               {userProfile?.role === "student" && !isExpired && (
                 <div className="rounded-lg border p-3">
@@ -383,7 +366,6 @@ export function OpportunityDetail({
                   </div>
                 </div>
               )}
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
             </CardContent>
           </Card>
 

@@ -2,11 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-<<<<<<< HEAD
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
-=======
 import { DashboardShell } from "@/components/dashboard-shell"
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { TeacherApplications } from "@/components/teacher-applications"
 import type { Application, Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -40,11 +36,7 @@ function TeacherApplicationsPageContent() {
       return
     }
 
-<<<<<<< HEAD
-    if (storedUser.role !== "teacher") {
-=======
     if (storedUser.role !== "teacher" && storedUser.role !== "maintainer") {
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       router.replace("/dashboard/student")
       return
     }
@@ -63,18 +55,6 @@ function TeacherApplicationsPageContent() {
   }
 
   return (
-<<<<<<< HEAD
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar profile={data.profile} />
-      <main className="flex-1 overflow-auto">
-        <TeacherApplications
-          applications={data.applications}
-          opportunities={data.opportunities}
-          currentFilter={filter}
-        />
-      </main>
-    </div>
-=======
     <DashboardShell profile={data.profile} title="Applications">
       <TeacherApplications
         applications={data.applications}
@@ -82,7 +62,6 @@ function TeacherApplicationsPageContent() {
         currentFilter={filter}
       />
     </DashboardShell>
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   )
 }
 

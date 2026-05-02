@@ -1,10 +1,4 @@
 import User from "../models/user.model.js";
-<<<<<<< HEAD
-
-export const getUsers = async (req, res, next) => {
-  try {
-    const users = await User.find({ role: { $ne: "admin" } }).select("-password");
-=======
 import TeacherInvite from "../models/teacherInvite.model.js";
 import bcrypt from "bcrypt";
 import crypto from "node:crypto";
@@ -55,7 +49,6 @@ export const getUsers = async (req, res, next) => {
     if (req.query.active === "false") filters.isActive = false;
 
     const users = await User.find(filters).select(publicUserFields).sort({ createdAt: -1 });
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     return res.status(200).json({
       message: "Users retrieved successfully",
@@ -69,11 +62,7 @@ export const getUsers = async (req, res, next) => {
 
 export const getUsersById = async (req, res, next) => {
   try {
-<<<<<<< HEAD
-    const user = await User.findById(req.params.id).select("-password");
-=======
     const user = await User.findById(req.params.id).select(publicUserFields);
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -90,28 +79,20 @@ export const getUsersById = async (req, res, next) => {
 
 export const deleteUserById = async (req, res, next) => {
   try {
-<<<<<<< HEAD
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
-=======
     const deletedUser = await User.findByIdAndUpdate(
       req.params.id,
       { isActive: false },
       { new: true }
     ).select(publicUserFields);
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-<<<<<<< HEAD
-    return res.status(200).json({ message: "User deleted successfully" });
-=======
     return res.status(200).json({
       message: "User deactivated successfully",
       user: deletedUser,
     });
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   } catch (error) {
     next(error);
   }
@@ -119,11 +100,7 @@ export const deleteUserById = async (req, res, next) => {
 
 export const getCurrentUserProfile = async (req, res, next) => {
   try {
-<<<<<<< HEAD
-    const user = await User.findById(req.user.id).select("-password");
-=======
     const user = await User.findById(req.user.id).select(publicUserFields);
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -158,11 +135,7 @@ export const updateCurrentUserProfile = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user.id, updates, {
       new: true,
       runValidators: true,
-<<<<<<< HEAD
-    }).select("-password");
-=======
     }).select(publicUserFields);
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -176,8 +149,6 @@ export const updateCurrentUserProfile = async (req, res, next) => {
     next(error);
   }
 };
-<<<<<<< HEAD
-=======
 
 export const createUserByAdmin = async (req, res, next) => {
   try {
@@ -293,4 +264,3 @@ export const getMaintainers = async (_req, res, next) => {
     next(error);
   }
 };
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183

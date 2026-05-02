@@ -148,13 +148,8 @@ export const getPublicMetrics = async (req, res, next) => {
     const now = new Date();
     const [activeOpportunities, registeredUsers, applications, acceptedApplications] =
       await Promise.all([
-<<<<<<< HEAD
-        Event.countDocuments({ status: "active", deadline: { $gte: now } }),
-        User.countDocuments({ role: { $ne: "admin" } }),
-=======
         Event.countDocuments({ status: "active", approvalStatus: "approved", deadline: { $gte: now } }),
         User.countDocuments({ role: "student", isActive: true }),
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
         Application.countDocuments(),
         Application.countDocuments({ status: "accepted" }),
       ]);
@@ -168,8 +163,4 @@ export const getPublicMetrics = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183

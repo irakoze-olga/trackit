@@ -1,30 +1,10 @@
 "use client"
 
 import Link from "next/link"
-<<<<<<< HEAD
-import Image from "next/image"
-=======
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { formatDistanceToNow, format, isPast } from "date-fns"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-<<<<<<< HEAD
-import {
-  Calendar,
-  MapPin,
-  Building2,
-  Globe,
-  Bookmark,
-  BookmarkCheck,
-  ExternalLink,
-  Clock
-} from "lucide-react"
-import {
-  type Opportunity,
-  CATEGORY_LABELS,
-  CATEGORY_COLORS
-=======
 import { 
   Calendar, 
   MapPin, 
@@ -41,7 +21,6 @@ import {
   type Opportunity, 
   CATEGORY_LABELS, 
   CATEGORY_COLORS 
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
@@ -67,53 +46,6 @@ export function OpportunityCard({
 
   return (
     <Card className={cn(
-<<<<<<< HEAD
-      "group transition-all duration-200 hover:shadow-md hover:border-primary/30 overflow-hidden",
-      isExpired && "opacity-60"
-    )}>
-      {/* Image Section */}
-      <div className="relative h-48 w-full">
-        {opportunity.image_url ? (
-          <Image
-            src={opportunity.image_url}
-            alt={opportunity.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/10 via-background to-accent/10 flex items-center justify-center">
-            <div className="text-center p-4">
-              <div className="w-16 h-16 mx-auto mb-2 bg-primary/10 rounded-full flex items-center justify-center">
-                <Building2 className="h-8 w-8 text-primary" />
-              </div>
-              <p className="text-sm text-muted-foreground">No image available</p>
-            </div>
-          </div>
-        )}
-        {showActions && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm hover:bg-background"
-            onClick={() => isSaved ? onUnsave?.(opportunity.id) : onSave?.(opportunity.id)}
-            aria-label={isSaved ? "Remove from saved" : "Save opportunity"}
-          >
-            {isSaved ? (
-              <BookmarkCheck className="h-5 w-5 text-primary" />
-            ) : (
-              <Bookmark className="h-5 w-5" />
-            )}
-          </Button>
-        )}
-      </div>
-
-      <CardHeader className="pb-3">
-        <div className="flex items-start gap-4">
-          <div className="flex-1 min-w-0">
-            <Badge
-              variant="outline"
-=======
       "group transition-all duration-200 hover:shadow-md hover:border-primary/30",
       isExpired && "opacity-60"
     )}>
@@ -131,7 +63,6 @@ export function OpportunityCard({
           <div className="flex-1 min-w-0">
             <Badge 
               variant="outline" 
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
               className={cn("mb-2 text-xs", CATEGORY_COLORS[opportunity.category])}
             >
               {CATEGORY_LABELS[opportunity.category]}
@@ -142,11 +73,6 @@ export function OpportunityCard({
               </Link>
             </h3>
           </div>
-<<<<<<< HEAD
-        </div>
-      </CardHeader>
-
-=======
           {showActions && (
             <Button
               variant="ghost"
@@ -165,7 +91,6 @@ export function OpportunityCard({
         </div>
       </CardHeader>
       
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       <CardContent className="pb-3">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground mb-3">
           <div className="flex items-center gap-1.5">
@@ -185,14 +110,6 @@ export function OpportunityCard({
             </div>
           )}
         </div>
-<<<<<<< HEAD
-
-        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-          {opportunity.description}
-        </p>
-      </CardContent>
-
-=======
         
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {opportunity.preview_description || opportunity.description}
@@ -211,7 +128,6 @@ export function OpportunityCard({
         </div>
       </CardContent>
       
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       <CardFooter className="pt-3 border-t flex flex-col gap-3">
         <div className="flex items-center justify-between w-full">
           <div className={cn(
@@ -224,13 +140,8 @@ export function OpportunityCard({
               <Calendar className="h-4 w-4" />
             )}
             <span>
-<<<<<<< HEAD
-              {isExpired
-                ? "Expired"
-=======
               {isExpired 
                 ? "Expired" 
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
                 : `Due ${formatDistanceToNow(deadlineDate, { addSuffix: true })}`
               }
             </span>
@@ -238,11 +149,7 @@ export function OpportunityCard({
               ({format(deadlineDate, "MMM d, yyyy")})
             </span>
           </div>
-<<<<<<< HEAD
-
-=======
           
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
           <Button variant="ghost" size="sm" asChild>
             <Link href={`/opportunities/${opportunity.id}`}>
               View Details
@@ -250,36 +157,6 @@ export function OpportunityCard({
             </Link>
           </Button>
         </div>
-<<<<<<< HEAD
-
-        <div className="flex gap-2">
-          <Button
-            className="flex-1"
-            onClick={() => onApply?.(opportunity.id)}
-            disabled={isExpired}
-          >
-            Apply Now
-          </Button>
-          {opportunity.application_url && (
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              disabled={isExpired}
-            >
-              <a
-                href={opportunity.application_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-                Apply
-              </a>
-            </Button>
-          )}
-        </div>
-=======
         
         <Button 
           className="w-full" 
@@ -288,7 +165,6 @@ export function OpportunityCard({
         >
           Apply Now
         </Button>
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       </CardFooter>
     </Card>
   )

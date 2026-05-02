@@ -16,7 +16,7 @@ function getSessionFingerprint(req: any) {
   };
 }
 
-export async function registerTeacherWithInvite(input: {
+export default async function registerTeacherWithInvite(input: {
   firstname: string;
   lastname: string;
   email: string;

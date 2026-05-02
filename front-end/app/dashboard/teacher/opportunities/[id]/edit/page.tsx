@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-<<<<<<< HEAD
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
-=======
 import { DashboardShell } from "@/components/dashboard-shell"
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { OpportunityForm } from "@/components/opportunity-form"
 import type { Opportunity, Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -27,11 +23,7 @@ export default function EditOpportunityPage() {
       return
     }
 
-<<<<<<< HEAD
-    if (storedUser.role !== "teacher") {
-=======
     if (storedUser.role !== "teacher" && storedUser.role !== "maintainer") {
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       router.replace("/dashboard/student")
       return
     }
@@ -53,17 +45,8 @@ export default function EditOpportunityPage() {
   }
 
   return (
-<<<<<<< HEAD
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar profile={profile} />
-      <main className="flex-1 overflow-auto">
-        <OpportunityForm opportunity={opportunity} />
-      </main>
-    </div>
-=======
     <DashboardShell profile={profile} title="Edit opportunity">
       <OpportunityForm opportunity={opportunity} />
     </DashboardShell>
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   )
 }

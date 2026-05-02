@@ -3,10 +3,6 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-<<<<<<< HEAD
-import Image from "next/image"
-=======
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -24,16 +20,10 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Spinner } from "@/components/ui/spinner"
 import type { Opportunity, OpportunityCategory } from "@/lib/types"
-<<<<<<< HEAD
-import { AlertCircle, ArrowLeft, Save, Send, Link2, Upload, Globe } from "lucide-react"
-import { toast } from "sonner"
-import { createOpportunity, updateOpportunity } from "@/lib/backend-api"
-=======
 import { AlertCircle, ArrowLeft, Save, Send } from "lucide-react"
 import { toast } from "sonner"
 import { createOpportunity, updateOpportunity } from "@/lib/backend-api"
 import { getStoredUser } from "@/lib/backend-auth"
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
 interface OpportunityFormProps {
   opportunity?: Opportunity
@@ -55,21 +45,6 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
   const isEditing = !!opportunity
 
   const [formData, setFormData] = useState({
-<<<<<<< HEAD
-    application_url: opportunity?.application_url || "",
-    category: opportunity?.category || ("scholarship" as OpportunityCategory),
-    deadline: opportunity?.deadline ? new Date(opportunity.deadline).toISOString().split("T")[0] : "",
-    image_url: opportunity?.image_url || "",
-    scrapedData: {
-      title: opportunity?.title || "",
-      description: opportunity?.description || "",
-      organization: opportunity?.organization || "",
-      location: opportunity?.location || "",
-      eligibility: opportunity?.eligibility || "",
-      requirements: opportunity?.requirements || "",
-      benefits: opportunity?.benefits || "",
-    }
-=======
     title: opportunity?.title || "",
     description: opportunity?.description || "",
     category: opportunity?.category || ("scholarship" as OpportunityCategory),
@@ -81,75 +56,16 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
     requirements: opportunity?.requirements || "",
     benefits: opportunity?.benefits || "",
     application_url: opportunity?.application_url || "",
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   })
 
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
-<<<<<<< HEAD
-  const [scraping, setScraping] = useState(false)
-  const [imagePreview, setImagePreview] = useState<string | null>(opportunity?.image_url || null)
-=======
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
   function handleChange(field: string, value: string | boolean) {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-<<<<<<< HEAD
-  function handleScrapedDataChange(field: string, value: string) {
-    setFormData((prev) => ({
-      ...prev,
-      scrapedData: { ...prev.scrapedData, [field]: value }
-    }))
-  }
-
-  async function scrapeLinkData(url: string) {
-    if (!url.trim()) return
-
-    setScraping(true)
-    try {
-      // Create a simple scraper function
-      const response = await fetch(`/api/scrape?url=${encodeURIComponent(url)}`)
-      if (response.ok) {
-        const data = await response.json()
-        if (data.success) {
-          handleScrapedDataChange('title', data.title || '')
-          handleScrapedDataChange('description', data.description || '')
-          handleScrapedDataChange('organization', data.organization || '')
-          setImagePreview(data.image || null)
-          handleChange('image_url', data.image || '')
-          toast.success('Link data scraped successfully!')
-        }
-      }
-    } catch (error) {
-      toast.error('Failed to scrape link data')
-    } finally {
-      setScraping(false)
-    }
-  }
-
-  function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0]
-    if (file) {
-      // For now, create a preview URL (in production, upload to cloud storage)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const result = reader.result as string
-        setImagePreview(result)
-        handleChange('image_url', result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  async function handleSubmit(status: "draft" | "active") {
-    setError(null)
-
-    if (!formData.application_url.trim()) {
-      setError("Application URL is required")
-=======
   async function handleSubmit(status: "draft" | "active") {
     setError(null)
 
@@ -163,24 +79,12 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
     }
     if (!formData.organization.trim()) {
       setError("Organization is required")
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       return
     }
     if (!formData.deadline) {
       setError("Deadline is required")
       return
     }
-<<<<<<< HEAD
-    if (!formData.scrapedData.title.trim()) {
-      setError("Title is required (scraped from link or entered manually)")
-      return
-    }
-    if (!formData.scrapedData.description.trim()) {
-      setError("Description is required (scraped from link or entered manually)")
-      return
-    }
-=======
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     const isPublishing = status === "active"
     if (isPublishing) {
@@ -190,23 +94,6 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
     }
 
     try {
-<<<<<<< HEAD
-      const submissionData = {
-        ...formData.scrapedData,
-        category: formData.category,
-        deadline: formData.deadline,
-        application_url: formData.application_url,
-        image_url: formData.image_url,
-        is_remote: formData.scrapedData.location === "Remote" || !formData.scrapedData.location,
-        status,
-      }
-
-      if (isEditing && opportunity) {
-        await updateOpportunity(opportunity.id, submissionData)
-        toast.success(isPublishing ? "Opportunity published!" : "Changes saved")
-      } else {
-        await createOpportunity(submissionData)
-=======
       if (isEditing && opportunity) {
         await updateOpportunity(opportunity.id, {
           ...formData,
@@ -218,19 +105,10 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
           ...formData,
           status,
         })
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
         toast.success(isPublishing ? "Opportunity published!" : "Draft saved")
       }
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : "Unable to save opportunity")
-<<<<<<< HEAD
-      setSaving(false)
-      setPublishing(false)
-      return
-    }
-
-    router.push("/dashboard/teacher/opportunities")
-=======
         setSaving(false)
         setPublishing(false)
         return
@@ -238,7 +116,6 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
 
     const storedUser = getStoredUser()
     router.push(storedUser?.role === "student" ? "/dashboard/student" : "/dashboard/teacher/opportunities")
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
     router.refresh()
   }
 
@@ -257,13 +134,8 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
         </h1>
         <p className="text-muted-foreground">
           {isEditing
-<<<<<<< HEAD
-            ? "Update the opportunity details"
-            : "Paste a link to automatically extract opportunity details"}
-=======
             ? "Update the details of your opportunity"
             : "Fill in the details to create a new opportunity listing"}
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
         </p>
       </div>
 
@@ -278,41 +150,12 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
         <CardHeader>
           <CardTitle>Opportunity Details</CardTitle>
           <CardDescription>
-<<<<<<< HEAD
-            Paste a link to automatically extract opportunity information
-=======
             Provide comprehensive information to attract the right candidates
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <FieldGroup>
             <Field>
-<<<<<<< HEAD
-              <FieldLabel htmlFor="application_url">Opportunity Link *</FieldLabel>
-              <div className="flex gap-2">
-                <Input
-                  id="application_url"
-                  type="url"
-                  placeholder="https://example.com/opportunity"
-                  value={formData.application_url}
-                  onChange={(e) => handleChange("application_url", e.target.value)}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => scrapeLinkData(formData.application_url)}
-                  disabled={scraping || !formData.application_url.trim()}
-                >
-                  {scraping ? <Spinner className="h-4 w-4" /> : <Link2 className="h-4 w-4" />}
-                  {scraping ? "Scraping..." : "Extract"}
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Paste the link to the opportunity page and we'll extract the details automatically
-              </p>
-=======
               <FieldLabel htmlFor="title">Title *</FieldLabel>
               <Input
                 id="title"
@@ -320,7 +163,6 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
                 value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
               />
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
             </Field>
 
             <Field>
@@ -343,43 +185,12 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
             </Field>
 
             <Field>
-<<<<<<< HEAD
-              <FieldLabel htmlFor="deadline">Application Deadline *</FieldLabel>
-              <Input
-                id="deadline"
-                type="date"
-                value={formData.deadline}
-                onChange={(e) => handleChange("deadline", e.target.value)}
-                min={new Date().toISOString().split("T")[0]}
-              />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="title">Title *</FieldLabel>
-              <Textarea
-                id="title"
-                placeholder="Opportunity title (will be auto-extracted from link)"
-                rows={2}
-                value={formData.scrapedData.title}
-                onChange={(e) => handleScrapedDataChange("title", e.target.value)}
-              />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="organization">Organization *</FieldLabel>
-              <Input
-                id="organization"
-                placeholder="Organization name (will be auto-extracted from link)"
-                value={formData.scrapedData.organization}
-                onChange={(e) => handleScrapedDataChange("organization", e.target.value)}
-=======
               <FieldLabel htmlFor="organization">Organization *</FieldLabel>
               <Input
                 id="organization"
                 placeholder="e.g., University of Technology"
                 value={formData.organization}
                 onChange={(e) => handleChange("organization", e.target.value)}
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
               />
             </Field>
 
@@ -387,24 +198,6 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
               <FieldLabel htmlFor="description">Description *</FieldLabel>
               <Textarea
                 id="description"
-<<<<<<< HEAD
-                placeholder="Detailed description (will be auto-extracted from link)"
-                rows={5}
-                value={formData.scrapedData.description}
-                onChange={(e) => handleScrapedDataChange("description", e.target.value)}
-              />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="location">Location</FieldLabel>
-              <Input
-                id="location"
-                placeholder="e.g., Kigali, Rwanda or Remote"
-                value={formData.scrapedData.location}
-                onChange={(e) => handleScrapedDataChange("location", e.target.value)}
-              />
-            </Field>
-=======
                 placeholder="Provide a detailed description of the opportunity..."
                 rows={5}
                 value={formData.description}
@@ -443,23 +236,15 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
               />
               <Label htmlFor="is_remote">This opportunity is remote-friendly</Label>
             </div>
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
             <Field>
               <FieldLabel htmlFor="eligibility">Eligibility</FieldLabel>
               <Textarea
                 id="eligibility"
-<<<<<<< HEAD
-                placeholder="Who can apply? (will be auto-extracted from link)"
-                rows={3}
-                value={formData.scrapedData.eligibility}
-                onChange={(e) => handleScrapedDataChange("eligibility", e.target.value)}
-=======
                 placeholder="Who can apply? e.g., Undergraduate students in STEM fields..."
                 rows={3}
                 value={formData.eligibility}
                 onChange={(e) => handleChange("eligibility", e.target.value)}
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
               />
             </Field>
 
@@ -467,17 +252,10 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
               <FieldLabel htmlFor="requirements">Requirements</FieldLabel>
               <Textarea
                 id="requirements"
-<<<<<<< HEAD
-                placeholder="What are the requirements? (will be auto-extracted from link)"
-                rows={3}
-                value={formData.scrapedData.requirements}
-                onChange={(e) => handleScrapedDataChange("requirements", e.target.value)}
-=======
                 placeholder="What are the requirements? e.g., Resume, cover letter, transcripts..."
                 rows={3}
                 value={formData.requirements}
                 onChange={(e) => handleChange("requirements", e.target.value)}
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
               />
             </Field>
 
@@ -485,69 +263,14 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
               <FieldLabel htmlFor="benefits">Benefits</FieldLabel>
               <Textarea
                 id="benefits"
-<<<<<<< HEAD
-                placeholder="What does the candidate get? (will be auto-extracted from link)"
-                rows={3}
-                value={formData.scrapedData.benefits}
-                onChange={(e) => handleScrapedDataChange("benefits", e.target.value)}
-=======
                 placeholder="What does the candidate get? e.g., Stipend, mentorship, certificate..."
                 rows={3}
                 value={formData.benefits}
                 onChange={(e) => handleChange("benefits", e.target.value)}
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
               />
             </Field>
 
             <Field>
-<<<<<<< HEAD
-              <FieldLabel>Cover Image</FieldLabel>
-              <div className="space-y-4">
-                {imagePreview && (
-                  <div className="relative h-48 w-full rounded-lg overflow-hidden border">
-                    <Image
-                      src={imagePreview}
-                      alt="Opportunity cover"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 400px"
-                    />
-                  </div>
-                )}
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => document.getElementById('image-upload')?.click()}
-                    className="flex-1"
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Image
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setImagePreview(null)
-                      handleChange('image_url', '')
-                    }}
-                    disabled={!imagePreview}
-                  >
-                    Remove
-                  </Button>
-                </div>
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Upload a cover image for the opportunity. Recommended size: 1200x630px
-                </p>
-              </div>
-=======
               <FieldLabel htmlFor="application_url">External Application URL</FieldLabel>
               <Input
                 id="application_url"
@@ -556,7 +279,6 @@ export function OpportunityForm({ opportunity }: OpportunityFormProps) {
                 value={formData.application_url}
                 onChange={(e) => handleChange("application_url", e.target.value)}
               />
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
             </Field>
           </FieldGroup>
 

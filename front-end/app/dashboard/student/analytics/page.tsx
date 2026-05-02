@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-<<<<<<< HEAD
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
-=======
 import { DashboardShell } from "@/components/dashboard-shell"
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { StudentAnalyticsDashboard } from "@/components/student-analytics-dashboard"
 import type { Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -44,20 +40,6 @@ export default function StudentAnalyticsPage() {
   }
 
   return (
-<<<<<<< HEAD
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar profile={profile} />
-      <main className="flex-1 overflow-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Your Analytics</h1>
-          <p className="text-muted-foreground mt-2">
-            Track your application progress and success metrics
-          </p>
-        </div>
-        <StudentAnalyticsDashboard />
-      </main>
-    </div>
-=======
     <DashboardShell profile={profile} title="Analytics">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Your Analytics</h1>
@@ -67,6 +49,5 @@ export default function StudentAnalyticsPage() {
       </div>
       <StudentAnalyticsDashboard />
     </DashboardShell>
->>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   )
 }
