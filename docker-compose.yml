@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: ./back-end
+    env_file:
+      - ./back-end/.env
+    ports:
+      - "6487:6487"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:6487/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./front-end
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS: ${NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS}
+    env_file:
+      - ./front-end/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

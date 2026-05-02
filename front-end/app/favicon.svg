@@ -1,0 +1,39 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Modern green gradient background -->
+  <defs>
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lightGreenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34D399;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Square background with rounded corners -->
+  <rect x="2" y="2" width="28" height="28" rx="6" fill="url(#greenGradient)"/>
+  
+  <!-- TrackIt T logo -->
+  <!-- T top bar -->
+  <rect x="6" y="8" width="20" height="3" rx="1.5" fill="white"/>
+  
+  <!-- T vertical bar -->
+  <rect x="14.5" y="11" width="3" height="14" rx="1.5" fill="white"/>
+  
+  <!-- Tracking dots representing opportunities -->
+  <circle cx="8" cy="24" r="2" fill="url(#lightGreenGradient)" opacity="0.9"/>
+  <circle cx="16" cy="26" r="2" fill="url(#lightGreenGradient)" opacity="0.9"/>
+  <circle cx="24" cy="24" r="2" fill="url(#lightGreenGradient)" opacity="0.9"/>
+  
+  <!-- Tracking line connecting dots -->
+  <path d="M 8 24 L 16 26 L 24 24" stroke="url(#lightGreenGradient)" stroke-width="1.5" fill="none" opacity="0.7"/>
+  
+  <!-- Modern accent elements -->
+  <rect x="6" y="5" width="20" height="1" rx="0.5" fill="url(#lightGreenGradient)" opacity="0.6"/>
+  
+  <!-- Small tracking indicators -->
+  <circle cx="10" cy="22" r="0.8" fill="white" opacity="0.8"/>
+  <circle cx="16" cy="23" r="0.8" fill="white" opacity="0.8"/>
+  <circle cx="22" cy="22" r="0.8" fill="white" opacity="0.8"/>
+</svg>

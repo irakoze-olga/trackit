@@ -1,0 +1,9 @@
+.codex
+/.next
+.venv
+.txt
+.env
+*.env.*
+*.env
+!.env.example
+/node_modules
