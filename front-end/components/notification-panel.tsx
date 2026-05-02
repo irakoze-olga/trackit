@@ -1,12 +1,19 @@
 'use client'
 
 import { Notification } from '@/lib/types'
+<<<<<<< HEAD
 import { X, Check, Calendar, Bell, ExternalLink, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useState, useEffect } from 'react'
 import { formatDistanceToNow, format } from 'date-fns'
 import Link from 'next/link'
+=======
+import { X, Check } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useState, useEffect } from 'react'
+import { formatDistanceToNow } from 'date-fns'
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import {
   deleteNotification as deleteNotificationRequest,
   getNotificationsData,
@@ -78,7 +85,11 @@ export function NotificationPanel({ userId, onClose }: NotificationPanelProps) {
   return (
     <div className="max-h-96 overflow-y-auto">
       <div className="p-4 border-b border-border flex items-center justify-between">
+<<<<<<< HEAD
         <h3 className="font-semibold">TrackIt Notifications</h3>
+=======
+        <h3 className="font-semibold">Notifications</h3>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
         <Button
           variant="ghost"
           size="icon"
@@ -92,6 +103,7 @@ export function NotificationPanel({ userId, onClose }: NotificationPanelProps) {
         {notifications.map((notification) => (
           <div
             key={notification.id}
+<<<<<<< HEAD
             className={`p-4 hover:bg-muted/50 transition-colors cursor-pointer border-l-4 ${!notification.read_at ? 'bg-muted/30' : ''
               } ${getPriorityColor(notification.priority)}`}
             onClick={() => markAsRead(notification.id)}
@@ -130,6 +142,22 @@ export function NotificationPanel({ userId, onClose }: NotificationPanelProps) {
                     </div>
                   )}
                 </div>
+=======
+            className={`p-4 hover:bg-muted/50 transition-colors cursor-pointer ${
+              !notification.read_at ? 'bg-muted/30' : ''
+            }`}
+            onClick={() => markAsRead(notification.id)}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm truncate">{notification.title}</p>
+                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                  {notification.message}
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+                </p>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
               </div>
               <div className="flex items-center gap-2">
                 {!notification.read_at && (
@@ -153,11 +181,17 @@ export function NotificationPanel({ userId, onClose }: NotificationPanelProps) {
       </div>
 
       <div className="p-3 border-t border-border text-center">
+<<<<<<< HEAD
         <Link href="/notifications">
           <Button variant="outline" size="sm" className="w-full">
             View All Notifications
           </Button>
         </Link>
+=======
+        <Button variant="outline" size="sm" className="w-full">
+          View All Notifications
+        </Button>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       </div>
     </div>
   )

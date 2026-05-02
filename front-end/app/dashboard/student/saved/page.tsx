@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
+=======
+import { DashboardShell } from "@/components/dashboard-shell"
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { SavedOpportunities } from "@/components/saved-opportunities"
 import type { Opportunity, Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -43,11 +47,17 @@ export default function StudentSavedPage() {
   }
 
   return (
+<<<<<<< HEAD
     <div className="flex h-screen bg-background">
       <DashboardSidebar profile={data.profile} />
       <main className="flex-1 overflow-auto">
         <SavedOpportunities opportunities={data.opportunities} userId={data.profile.id} />
       </main>
     </div>
+=======
+    <DashboardShell profile={data.profile} title="Saved opportunities">
+      <SavedOpportunities opportunities={data.opportunities} userId={data.profile.id} />
+    </DashboardShell>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   )
 }

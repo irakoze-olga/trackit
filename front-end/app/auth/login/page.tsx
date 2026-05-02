@@ -11,16 +11,14 @@ import { FieldGroup, Field, FieldLabel } from "@/components/ui/field"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Spinner } from "@/components/ui/spinner"
 import { loginWithBackend } from "@/lib/backend-api"
-import { AlertCircle, ArrowLeft, Eye, EyeOff } from "lucide-react"
+import { AlertCircle, ArrowLeft } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -30,7 +28,11 @@ export default function LoginPage() {
     try {
       const user = await loginWithBackend(email, password)
 
-      if (user.role === "teacher") {
+      if (user.role === "admin") {
+        router.push("/dashboard/admin")
+      } else if (user.role === "maintainer") {
+        router.push("/dashboard/maintainer")
+      } else if (user.role === "teacher") {
         router.push("/dashboard/teacher")
       } else {
         router.push("/dashboard/student")
@@ -61,7 +63,7 @@ export default function LoginPage() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-
+            
             <FieldGroup className="gap-5">
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -75,7 +77,7 @@ export default function LoginPage() {
                   disabled={loading}
                 />
               </Field>
-
+              
               <Field>
                 <div className="flex items-center justify-between">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -83,45 +85,29 @@ export default function LoginPage() {
                     Forgot password?
                   </Link>
                 </div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    disabled={loading}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
-                    disabled={loading}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                />
               </Field>
             </FieldGroup>
           </CardContent>
-
-          <CardFooter className="flex flex-col gap-6 pt-6">
+          
+          <CardFooter className="flex flex-col gap-8 pt-6">
             <Button type="submit" id="login-submit" className="w-full" disabled={loading}>
               {loading ? <Spinner className="mr-2" /> : null}
               {loading ? "Signing in..." : "Sign In"}
             </Button>
-
-
-
+            
             <p className="text-sm text-muted-foreground text-center">
-              Don&apos;t have an account?{" "}
-              <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
-                Sign up
-              </Link>
+              RCA TrackIt accounts are issued by the platform admin.
             </p>
-
+            
             <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to home

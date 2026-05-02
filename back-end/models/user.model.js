@@ -26,9 +26,44 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
+<<<<<<< HEAD
       enum: ["student", "teacher", "admin"],
       required: true,
     },
+=======
+      enum: ["student", "teacher", "admin", "maintainer"],
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+      index: true,
+    },
+    mustChangePassword: {
+      type: Boolean,
+      default: false,
+    },
+    slackUserId: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    githubUsername: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    linkedinUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    lastLoginFingerprints: {
+      type: [String],
+      default: [],
+      select: false,
+    },
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
     age: {
       type: Number,
       required: function requireAge() {

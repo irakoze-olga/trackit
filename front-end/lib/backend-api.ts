@@ -40,7 +40,11 @@ function normalizeApiBaseUrl(rawValue?: string) {
   return `${withoutTrailingSlash}/api/v1`
 }
 
-const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL) || normalizeApiBaseUrl("http://localhost:5000")
+const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL)
+
+if (!API_BASE_URL) {
+  throw new Error("Missing NEXT_PUBLIC_API_URL. Set it in front-end/.env or your deployment environment.")
+}
 
 type BackendUser = {
   _id?: string
@@ -49,12 +53,17 @@ type BackendUser = {
   lastname: string
   fullName?: string
   email: string
-  role: "student" | "teacher" | "admin"
+  role: "student" | "teacher" | "admin" | "maintainer"
   age?: number
   institution?: string
   fieldOfStudy?: string
   bio?: string
   avatarUrl?: string
+  slackUserId?: string
+  githubUsername?: string
+  linkedinUrl?: string
+  isActive?: boolean
+  mustChangePassword?: boolean
   createdAt?: string
   updatedAt?: string
 }
@@ -69,9 +78,11 @@ type BackendEvent = {
   mode?: "online" | "onsite" | "hybrid"
   deadline: string
   link?: string
-  imageUrl?: string
-  status?: "draft" | "active" | "closed"
+  status?: "draft" | "active" | "closed" | "pending_approval" | "rejected"
   viewsCount?: number
+  imageUrl?: string
+  previewTitle?: string
+  previewDescription?: string
   createdAt: string
   updatedAt: string
   eligibility?: string
@@ -79,6 +90,10 @@ type BackendEvent = {
   benefits?: string
   postedBy?: BackendUser
   applicationCount?: number
+  interestedCount?: number
+  ratingCount?: number
+  averageRating?: number
+  popularityScore?: number
 }
 
 type BackendApplication = {
@@ -252,11 +267,16 @@ function mapUserToProfile(user: BackendUser): Profile {
     email: user.email,
     name: fullName,
     full_name: fullName,
-    role: user.role === "teacher" ? "teacher" : "student",
+    role: user.role,
     institution: user.institution || "",
     field_of_study: user.fieldOfStudy || "",
     bio: user.bio || "",
     avatar_url: user.avatarUrl || "",
+    githubUsername: user.githubUsername || "",
+    linkedinUrl: user.linkedinUrl || "",
+    slackUserId: user.slackUserId || "",
+    isActive: user.isActive ?? true,
+    mustChangePassword: user.mustChangePassword ?? false,
     created_at: user.createdAt ?? new Date().toISOString(),
     updated_at: user.updatedAt ?? new Date().toISOString(),
   }
@@ -277,8 +297,20 @@ function mapEventToOpportunity(event: BackendEvent): Opportunity {
     benefits: event.benefits || "",
     application_url: event.link || "",
     image_url: event.imageUrl || "",
+    preview_title: event.previewTitle || "",
+    preview_description: event.previewDescription || "",
+    application_count: event.applicationCount || 0,
+    interested_count: event.interestedCount || 0,
+    rating_count: event.ratingCount || 0,
+    average_rating: event.averageRating || 0,
+    popularity_score: event.popularityScore || 0,
     posted_by: event.postedBy?.id || event.postedBy?._id,
-    status: event.status || (new Date(event.deadline) < new Date() ? "closed" : "active"),
+    status:
+      event.status === "draft"
+        ? "draft"
+        : event.status === "closed"
+          ? "closed"
+          : "active",
     views_count: event.viewsCount || 0,
     created_at: event.createdAt,
     updated_at: event.updatedAt,
@@ -338,36 +370,32 @@ export async function loginWithBackend(email: string, password: string) {
   setAuthSession(payload.token, {
     id: payload.user.id,
     email: payload.user.email,
-    role: payload.user.role === "teacher" ? "teacher" : "student",
+    role: payload.user.role,
   })
 
   return payload.user
 }
 
-export async function signUpWithBackend(input: {
+export async function registerTeacherWithInvite(input: {
   fullName: string
   email: string
   password: string
-  role: "student" | "teacher"
-  age?: number
   institution?: string
-  fieldOfStudy?: string
+  inviteToken?: string
 }) {
   const nameParts = input.fullName.trim().split(/\s+/)
   const firstname = nameParts.shift() || input.fullName.trim()
   const lastname = nameParts.join(" ") || "User"
 
-  return apiRequest("/auth/signup", {
+  return apiRequest("/auth/teacher-invite", {
     method: "POST",
     body: JSON.stringify({
       firstname,
       lastname,
       email: input.email,
       password: input.password,
-      role: input.role,
-      age: input.role === "student" ? input.age : undefined,
       institution: input.institution,
-      fieldOfStudy: input.fieldOfStudy,
+      inviteToken: input.inviteToken,
     }),
   }, null)
 }
@@ -381,7 +409,7 @@ export async function updateCurrentUserProfile(profile: Partial<Profile>) {
   const fullName = profile.full_name || profile.name || ""
   const [firstname, ...rest] = fullName.trim().split(/\s+/)
 
-  const payload = await apiRequest<{ user: BackendUser }>("/user/profile", {
+  const payload = await apiRequest<{ user: BackendUser }>("/users/profile", {
     method: "PATCH",
     body: JSON.stringify({
       firstname: firstname || undefined,
@@ -397,12 +425,14 @@ export async function updateCurrentUserProfile(profile: Partial<Profile>) {
 }
 
 export async function getHomePageData(category?: string) {
-  const [eventsPayload, metrics] = await Promise.all([
+  const [eventsPayload, popularPayload, maintainersPayload, metrics] = await Promise.all([
     apiRequest<{ events: BackendEvent[] }>(
-      `/event/events?status=active&order=desc${category && category !== "all" ? `&category=${category}` : ""}`,
+      `/opportunities?status=active&order=desc${category && category !== "all" ? `&category=${category}` : ""}`,
       {},
       null
     ),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?status=active&sortBy=popular&order=desc", {}, null),
+    apiRequest<{ maintainers: BackendUser[] }>("/public/maintainers", {}, null),
     apiRequest<{
       active_opportunities: number
       registered_users: number
@@ -413,6 +443,8 @@ export async function getHomePageData(category?: string) {
 
   return {
     opportunities: eventsPayload.events.map(mapEventToOpportunity),
+    popular: popularPayload.events.slice(0, 6).map(mapEventToOpportunity),
+    maintainers: maintainersPayload.maintainers.map(mapUserToProfile),
     stats: metrics,
   }
 }
@@ -436,7 +468,7 @@ export async function listPublicOpportunities(options?: {
   }
 
   const eventsPayload = await apiRequest<{ events: BackendEvent[] }>(
-    `/event/events?${query.toString()}`,
+    `/opportunities?${query.toString()}`,
     {},
     options?.authAware ? getAuthToken() : null
   )
@@ -447,13 +479,13 @@ export async function listPublicOpportunities(options?: {
   if (user) {
     if (user.role === "student") {
       const [savedPayload, applicationsPayload] = await Promise.all([
-        apiRequest<{ saved: BackendSaved[] }>("/saved"),
-        apiRequest<{ applications: BackendApplication[] }>("/application/applications?mine=true"),
+        apiRequest<{ saved: BackendSaved[] }>("/users/saved"),
+        apiRequest<{ applications: BackendApplication[] }>("/opportunities/applications?mine=true"),
       ])
       savedIds = savedPayload.saved.map((item) => item.event._id)
       appliedIds = applicationsPayload.applications.map((item) => item.event._id)
     } else {
-      const savedPayload = await apiRequest<{ saved: BackendSaved[] }>("/saved").catch(() => ({
+      const savedPayload = await apiRequest<{ saved: BackendSaved[] }>("/users/saved").catch(() => ({
         saved: [],
       }))
       savedIds = savedPayload.saved.map((item) => item.event._id)
@@ -468,7 +500,7 @@ export async function listPublicOpportunities(options?: {
 }
 
 export async function getOpportunityDetailData(opportunityId: string) {
-  const payload = await apiRequest<{ event: BackendEvent }>(`/event/events/${opportunityId}`, {}, null)
+  const payload = await apiRequest<{ event: BackendEvent }>(`/opportunities/${opportunityId}`, {}, null)
   const opportunity = mapEventToOpportunity(payload.event)
   const poster = payload.event.postedBy ? mapUserToProfile(payload.event.postedBy) : null
 
@@ -482,16 +514,16 @@ export async function getOpportunityDetailData(opportunityId: string) {
 
     if (user.role === "student") {
       const [savedPayload, applicationsPayload] = await Promise.all([
-        apiRequest<{ saved: BackendSaved[] }>("/saved"),
+        apiRequest<{ saved: BackendSaved[] }>("/users/saved"),
         apiRequest<{ applications: BackendApplication[] }>(
-          `/application/applications?mine=true&eventId=${opportunityId}`
+          `/opportunities/applications?mine=true&eventId=${opportunityId}`
         ),
       ])
 
       hasApplied = applicationsPayload.applications.length > 0
       isSaved = savedPayload.saved.some((item) => item.event._id === opportunityId)
     } else {
-      const savedPayload = await apiRequest<{ saved: BackendSaved[] }>("/saved").catch(() => ({
+      const savedPayload = await apiRequest<{ saved: BackendSaved[] }>("/users/saved").catch(() => ({
         saved: [],
       }))
       isSaved = savedPayload.saved.some((item) => item.event._id === opportunityId)
@@ -508,25 +540,25 @@ export async function getOpportunityDetailData(opportunityId: string) {
 }
 
 export async function incrementOpportunityView(opportunityId: string) {
-  return apiRequest(`/event/events/${opportunityId}/view`, { method: "POST" }, null)
+  return apiRequest(`/opportunities/${opportunityId}/view`, { method: "POST" }, null)
 }
 
 export async function saveOpportunity(opportunityId: string) {
-  return apiRequest<{ saved: BackendSaved }>("/saved", {
+  return apiRequest<{ saved: BackendSaved }>("/users/saved", {
     method: "POST",
     body: JSON.stringify({ eventId: opportunityId }),
   })
 }
 
 export async function unsaveOpportunity(opportunityId: string) {
-  return apiRequest(`/saved/${opportunityId}`, { method: "DELETE" })
+  return apiRequest(`/users/saved/${opportunityId}`, { method: "DELETE" })
 }
 
 export async function createApplication(input: {
   opportunityId: string
   coverLetter?: string
 }) {
-  const payload = await apiRequest<{ application: BackendApplication }>("/application/applications", {
+  const payload = await apiRequest<{ application: BackendApplication }>("/opportunities/applications", {
     method: "POST",
     body: JSON.stringify({
       eventId: input.opportunityId,
@@ -540,7 +572,7 @@ export async function createApplication(input: {
 
 export async function updateApplication(applicationId: string, body: Record<string, unknown>) {
   const payload = await apiRequest<{ application: BackendApplication }>(
-    `/application/applications/${applicationId}`,
+    `/opportunities/applications/${applicationId}`,
     {
       method: "PATCH",
       body: JSON.stringify(body),
@@ -558,9 +590,9 @@ export async function getStudentDashboardData(): Promise<StudentOverviewData> {
 
   const [profile, applicationsPayload, savedPayload, opportunitiesPayload] = await Promise.all([
     getCurrentUserProfile(),
-    apiRequest<{ applications: BackendApplication[] }>("/application/applications?mine=true"),
-    apiRequest<{ saved: BackendSaved[] }>("/saved"),
-    apiRequest<{ events: BackendEvent[] }>("/event/events?status=active&order=desc"),
+    apiRequest<{ applications: BackendApplication[] }>("/opportunities/applications?mine=true"),
+    apiRequest<{ saved: BackendSaved[] }>("/users/saved"),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?status=active&order=desc"),
   ])
 
   const applications = applicationsPayload.applications.map(mapApplicationToJoinedApplication)
@@ -605,7 +637,7 @@ export async function getStudentExploreData() {
 export async function getStudentApplicationsData() {
   const [profile, payload] = await Promise.all([
     getCurrentUserProfile(),
-    apiRequest<{ applications: BackendApplication[] }>("/application/applications?mine=true"),
+    apiRequest<{ applications: BackendApplication[] }>("/opportunities/applications?mine=true"),
   ])
 
   return {
@@ -617,7 +649,7 @@ export async function getStudentApplicationsData() {
 export async function getStudentSavedData() {
   const [profile, payload] = await Promise.all([
     getCurrentUserProfile(),
-    apiRequest<{ saved: BackendSaved[] }>("/saved"),
+    apiRequest<{ saved: BackendSaved[] }>("/users/saved"),
   ])
 
   return {
@@ -631,14 +663,14 @@ export async function getStudentSavedData() {
 
 export async function getTeacherOverviewData(): Promise<TeacherOverviewData> {
   const storedUser = ensureAuthenticatedUser()
-  if (storedUser.role !== "teacher") {
-    throw new Error("Teacher access required")
+  if (storedUser.role !== "teacher" && storedUser.role !== "maintainer") {
+    throw new Error("Teacher or maintainer access required")
   }
 
   const [profile, eventsPayload, applicationsPayload] = await Promise.all([
     getCurrentUserProfile(),
-    apiRequest<{ events: BackendEvent[] }>("/event/events?mine=true&sortBy=createdAt&order=desc"),
-    apiRequest<{ applications: BackendApplication[] }>("/application/applications?mine=true"),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?mine=true&sortBy=createdAt&order=desc"),
+    apiRequest<{ applications: BackendApplication[] }>("/opportunities/applications?mine=true"),
   ])
 
   const opportunities = eventsPayload.events.map(mapEventToOpportunity)
@@ -685,7 +717,7 @@ export async function getTeacherOverviewData(): Promise<TeacherOverviewData> {
 export async function getTeacherOpportunitiesData() {
   const [profile, payload] = await Promise.all([
     getCurrentUserProfile(),
-    apiRequest<{ events: BackendEvent[] }>("/event/events?mine=true&sortBy=createdAt&order=desc"),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?mine=true&sortBy=createdAt&order=desc"),
   ])
 
   return {
@@ -698,7 +730,7 @@ export async function getTeacherOpportunitiesData() {
 }
 
 export async function createOpportunity(input: OpportunityFormInput) {
-  const payload = await apiRequest<{ event: BackendEvent }>("/event/events", {
+  const payload = await apiRequest<{ event: BackendEvent }>("/opportunities", {
     method: "POST",
     body: JSON.stringify({
       title: input.title,
@@ -720,8 +752,80 @@ export async function createOpportunity(input: OpportunityFormInput) {
   return mapEventToOpportunity(payload.event)
 }
 
+export async function saveOpportunityEngagement(
+  opportunityId: string,
+  input: { interested?: boolean; rating?: number }
+) {
+  return apiRequest(`/opportunities/${opportunityId}/engagement`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  })
+}
+
+export async function getAdminDashboardData() {
+  const [profile, usersPayload, pendingPayload, activePayload] = await Promise.all([
+    getCurrentUserProfile(),
+    apiRequest<{ users: BackendUser[] }>("/users"),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?status=pending_approval&sortBy=createdAt&order=desc"),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?status=active&sortBy=createdAt&order=desc"),
+  ])
+
+  return {
+    profile,
+    users: usersPayload.users.map(mapUserToProfile),
+    pending: pendingPayload.events.map(mapEventToOpportunity),
+    active: activePayload.events.map(mapEventToOpportunity),
+  }
+}
+
+export async function adminCreateUser(input: {
+  firstname: string
+  lastname: string
+  email: string
+  role: "student" | "teacher" | "maintainer"
+  age?: number
+  githubUsername?: string
+  linkedinUrl?: string
+  avatarUrl?: string
+  slackUserId?: string
+}) {
+  return apiRequest<{ user: BackendUser; temporaryPassword: string }>("/users", {
+    method: "POST",
+    body: JSON.stringify(input),
+  })
+}
+
+export async function adminDeactivateUser(userId: string) {
+  return apiRequest(`/users/${userId}`, { method: "DELETE" })
+}
+
+export async function adminSendInvitation(userId: string) {
+  return apiRequest(`/users/${userId}/invite`, { method: "POST" })
+}
+
+export async function adminCreateTeacherInvite(email?: string) {
+  return apiRequest<{ invite: { registrationUrl: string; expiresAt: string } }>(
+    "/users/teacher-invites",
+    {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }
+  )
+}
+
+export async function adminApproveOpportunity(opportunityId: string) {
+  return apiRequest(`/opportunities/${opportunityId}/approve`, { method: "PATCH" })
+}
+
+export async function adminRejectOpportunity(opportunityId: string, reason?: string) {
+  return apiRequest(`/opportunities/${opportunityId}/reject`, {
+    method: "PATCH",
+    body: JSON.stringify({ reason }),
+  })
+}
+
 export async function updateOpportunity(opportunityId: string, input: OpportunityFormInput) {
-  const payload = await apiRequest<{ event: BackendEvent }>(`/event/events/${opportunityId}`, {
+  const payload = await apiRequest<{ event: BackendEvent }>(`/opportunities/${opportunityId}`, {
     method: "PATCH",
     body: JSON.stringify({
       title: input.title,
@@ -744,12 +848,12 @@ export async function updateOpportunity(opportunityId: string, input: Opportunit
 }
 
 export async function getOpportunityForEdit(opportunityId: string) {
-  const payload = await apiRequest<{ event: BackendEvent }>(`/event/events/${opportunityId}`)
+  const payload = await apiRequest<{ event: BackendEvent }>(`/opportunities/${opportunityId}`)
   return mapEventToOpportunity(payload.event)
 }
 
 export async function patchOpportunity(opportunityId: string, body: Record<string, unknown>) {
-  const payload = await apiRequest<{ event: BackendEvent }>(`/event/events/${opportunityId}`, {
+  const payload = await apiRequest<{ event: BackendEvent }>(`/opportunities/${opportunityId}`, {
     method: "PATCH",
     body: JSON.stringify(body),
   })
@@ -758,15 +862,15 @@ export async function patchOpportunity(opportunityId: string, body: Record<strin
 }
 
 export async function deleteOpportunity(opportunityId: string) {
-  return apiRequest(`/event/events/${opportunityId}`, { method: "DELETE" })
+  return apiRequest(`/opportunities/${opportunityId}`, { method: "DELETE" })
 }
 
 export async function getTeacherApplicationsData(filter?: string) {
   const [profile, eventsPayload, applicationsPayload] = await Promise.all([
     getCurrentUserProfile(),
-    apiRequest<{ events: BackendEvent[] }>("/event/events?mine=true&sortBy=createdAt&order=desc"),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?mine=true&sortBy=createdAt&order=desc"),
     apiRequest<{ applications: BackendApplication[] }>(
-      `/application/applications?mine=true${filter && filter !== "all" ? `&eventId=${filter}` : ""}`
+      `/opportunities/applications?mine=true${filter && filter !== "all" ? `&eventId=${filter}` : ""}`
     ),
   ])
 
@@ -807,7 +911,7 @@ export async function getTeacherAnalyticsData() {
   const [profile, analytics, opportunitiesPayload] = await Promise.all([
     getCurrentUserProfile(),
     apiRequest<TeacherStats>("/analytics/teacher"),
-    apiRequest<{ events: BackendEvent[] }>("/event/events?mine=true&sortBy=createdAt&order=desc"),
+    apiRequest<{ events: BackendEvent[] }>("/opportunities?mine=true&sortBy=createdAt&order=desc"),
   ])
 
   const opportunities = opportunitiesPayload.events.map(mapEventToOpportunity)
@@ -837,20 +941,20 @@ export async function getTeacherAnalyticsChartData() {
 }
 
 export async function getNotificationsData() {
-  const payload = await apiRequest<{ notifications: BackendNotification[] }>("/notifications")
+  const payload = await apiRequest<{ notifications: BackendNotification[] }>("/users/notifications")
   return payload.notifications.map(mapNotification)
 }
 
 export async function markNotificationAsRead(notificationId: string) {
-  return apiRequest(`/notifications/${notificationId}/read`, { method: "PATCH" })
+  return apiRequest(`/users/notifications/${notificationId}/read`, { method: "PATCH" })
 }
 
 export async function deleteNotification(notificationId: string) {
-  return apiRequest(`/notifications/${notificationId}`, { method: "DELETE" })
+  return apiRequest(`/users/notifications/${notificationId}`, { method: "DELETE" })
 }
 
 export async function getNotificationPreferencesData() {
-  const payload = await apiRequest<{ preferences: NotificationPreferences }>("/notifications/preferences")
+  const payload = await apiRequest<{ preferences: NotificationPreferences }>("/users/notifications/preferences")
   return payload.preferences
 }
 
@@ -858,7 +962,7 @@ export async function updateNotificationPreferencesData(
   preferences: NotificationPreferences
 ) {
   const payload = await apiRequest<{ preferences: NotificationPreferences }>(
-    "/notifications/preferences",
+    "/users/notifications/preferences",
     {
       method: "PUT",
       body: JSON.stringify({

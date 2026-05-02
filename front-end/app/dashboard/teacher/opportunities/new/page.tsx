@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
+=======
+import { DashboardShell } from "@/components/dashboard-shell"
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { OpportunityForm } from "@/components/opportunity-form"
 import type { Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -21,8 +25,13 @@ export default function NewOpportunityPage() {
       return
     }
 
+<<<<<<< HEAD
     if (storedUser.role !== "teacher") {
       router.replace("/dashboard/student")
+=======
+    if (storedUser.role !== "teacher" && storedUser.role !== "maintainer") {
+      router.replace(storedUser.role === "admin" ? "/dashboard/admin" : "/dashboard/student")
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       return
     }
 
@@ -40,11 +49,17 @@ export default function NewOpportunityPage() {
   }
 
   return (
+<<<<<<< HEAD
     <div className="flex h-screen bg-background">
       <DashboardSidebar profile={profile} />
       <main className="flex-1 overflow-auto">
         <OpportunityForm />
       </main>
     </div>
+=======
+    <DashboardShell profile={profile} title="New opportunity">
+      <OpportunityForm />
+    </DashboardShell>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   )
 }

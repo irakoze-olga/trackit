@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export type UserRole = 'student' | 'teacher'
 
 export type OpportunityCategory =
@@ -8,15 +9,35 @@ export type OpportunityCategory =
   | 'workshop'
   | 'grant'
   | 'fellowship'
+=======
+export type UserRole = 'student' | 'teacher' | 'admin' | 'maintainer'
+
+export type OpportunityCategory = 
+  | 'scholarship' 
+  | 'internship' 
+  | 'job' 
+  | 'competition' 
+  | 'workshop' 
+  | 'grant' 
+  | 'fellowship' 
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   | 'other'
 
 export type OpportunityStatus = 'active' | 'closed' | 'draft'
 
+<<<<<<< HEAD
 export type ApplicationStatus =
   | 'pending'
   | 'under_review'
   | 'accepted'
   | 'rejected'
+=======
+export type ApplicationStatus = 
+  | 'pending' 
+  | 'under_review' 
+  | 'accepted' 
+  | 'rejected' 
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   | 'withdrawn'
 
 export interface Profile {
@@ -29,6 +50,14 @@ export interface Profile {
   field_of_study?: string
   bio?: string
   avatar_url?: string
+<<<<<<< HEAD
+=======
+  githubUsername?: string
+  linkedinUrl?: string
+  slackUserId?: string
+  isActive?: boolean
+  mustChangePassword?: boolean
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   created_at: string
   updated_at: string
 }
@@ -47,6 +76,16 @@ export interface Opportunity {
   benefits?: string
   application_url?: string
   image_url?: string
+<<<<<<< HEAD
+=======
+  preview_title?: string
+  preview_description?: string
+  application_count?: number
+  interested_count?: number
+  rating_count?: number
+  average_rating?: number
+  popularity_score?: number
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   posted_by?: string
   status: OpportunityStatus
   views_count: number
@@ -119,7 +158,11 @@ export const APPLICATION_STATUS_COLORS: Record<ApplicationStatus, string> = {
 }
 
 // Notification Types
+<<<<<<< HEAD
 export type NotificationType = 'deadline_reminder' | 'status_update' | 'application_received' | 'opportunity_verified'
+=======
+export type NotificationType = 'deadline_reminder' | 'status_update' | 'application_received' | 'opportunity_verified' | 'opportunity_posted' | 'security_alert'
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
 export interface NotificationPreferences {
   id: string
@@ -145,6 +188,7 @@ export interface Notification {
   opportunity?: Opportunity
 }
 
+<<<<<<< HEAD
 // Verification Types
 export type VerificationStatus = 'unverified' | 'verified' | 'flagged'
 
@@ -160,6 +204,8 @@ export interface Verification {
   teacher?: Profile
 }
 
+=======
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 // Student Profile Types
 export interface StudentProfile {
   id: string

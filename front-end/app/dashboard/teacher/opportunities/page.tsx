@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
+=======
+import { DashboardShell } from "@/components/dashboard-shell"
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { TeacherOpportunities } from "@/components/teacher-opportunities"
 import type { Opportunity, Profile } from "@/lib/types"
 import { getStoredUser } from "@/lib/backend-auth"
@@ -24,7 +28,11 @@ export default function TeacherOpportunitiesPage() {
       return
     }
 
+<<<<<<< HEAD
     if (storedUser.role !== "teacher") {
+=======
+    if (storedUser.role !== "teacher" && storedUser.role !== "maintainer") {
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       router.replace("/dashboard/student")
       return
     }
@@ -43,11 +51,17 @@ export default function TeacherOpportunitiesPage() {
   }
 
   return (
+<<<<<<< HEAD
     <div className="flex h-screen bg-background">
       <DashboardSidebar profile={data.profile} />
       <main className="flex-1 overflow-auto">
         <TeacherOpportunities opportunities={data.opportunities} />
       </main>
     </div>
+=======
+    <DashboardShell profile={data.profile} title="Opportunities">
+      <TeacherOpportunities opportunities={data.opportunities} />
+    </DashboardShell>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   )
 }

@@ -1,4 +1,8 @@
 import jwt from "jsonwebtoken";
+<<<<<<< HEAD
+=======
+import mongoose from "mongoose";
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { env } from "../config/env.js";
 
 const getToken = (req) => {
@@ -24,6 +28,12 @@ export const authorizeUser = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, env.JWT_SECRET);
+<<<<<<< HEAD
+=======
+    if (!decoded?.id || !mongoose.Types.ObjectId.isValid(decoded.id)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
     req.user = decoded;
     next();
   } catch (error) {
@@ -40,7 +50,16 @@ export const optionalAuth = (req, res, next) => {
       return next();
     }
 
+<<<<<<< HEAD
     req.user = jwt.verify(token, env.JWT_SECRET);
+=======
+    const decoded = jwt.verify(token, env.JWT_SECRET);
+    if (!decoded?.id || !mongoose.Types.ObjectId.isValid(decoded.id)) {
+      req.user = null;
+      return next();
+    }
+    req.user = decoded;
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
     next();
   } catch (error) {
     req.user = null;
@@ -59,6 +78,12 @@ export const authorizeAdmin = (req, res, next) => {
 
       req.user = jwt.verify(token, env.JWT_SECRET);
     }
+<<<<<<< HEAD
+=======
+    if (!req.user?.id || !mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Forbidden" });
@@ -81,6 +106,12 @@ export const authorizeRoles = (...roles) => (req, res, next) => {
 
       req.user = jwt.verify(token, env.JWT_SECRET);
     }
+<<<<<<< HEAD
+=======
+    if (!req.user?.id || !mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({ message: "Forbidden" });

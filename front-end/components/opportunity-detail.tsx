@@ -35,9 +35,17 @@ import {
   Send,
   Eye,
   Globe,
+<<<<<<< HEAD
 } from "lucide-react"
 import { toast } from "sonner"
 import { createApplication, saveOpportunity, unsaveOpportunity } from "@/lib/backend-api"
+=======
+  Star,
+  Heart,
+} from "lucide-react"
+import { toast } from "sonner"
+import { createApplication, saveOpportunity, saveOpportunityEngagement, unsaveOpportunity } from "@/lib/backend-api"
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 
 interface OpportunityDetailProps {
   opportunity: Opportunity
@@ -59,6 +67,11 @@ export function OpportunityDetail({
   const [saving, setSaving] = useState(false)
   const [applying, setApplying] = useState(false)
   const [coverLetter, setCoverLetter] = useState("")
+<<<<<<< HEAD
+=======
+  const [interested, setInterested] = useState(false)
+  const [rating, setRating] = useState(0)
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   const [dialogOpen, setDialogOpen] = useState(false)
   const router = useRouter()
 
@@ -121,6 +134,29 @@ export function OpportunityDetail({
     setApplying(false)
   }
 
+<<<<<<< HEAD
+=======
+  async function handleEngagement(next: { interested?: boolean; rating?: number }) {
+    if (!userProfile) {
+      router.push("/auth/login")
+      return
+    }
+    if (userProfile.role !== "student") {
+      toast.error("Only students can rate or mark interest")
+      return
+    }
+
+    try {
+      await saveOpportunityEngagement(opportunity.id, next)
+      if (typeof next.interested === "boolean") setInterested(next.interested)
+      if (typeof next.rating === "number") setRating(next.rating)
+      toast.success("Preference saved")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to save preference")
+    }
+  }
+
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link
@@ -135,6 +171,14 @@ export function OpportunityDetail({
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
+<<<<<<< HEAD
+=======
+            {opportunity.image_url && (
+              <div className="relative h-64 overflow-hidden rounded-t-lg bg-muted">
+                <img src={opportunity.image_url} alt="" className="h-full w-full object-cover" />
+              </div>
+            )}
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <Badge variant="secondary" className="capitalize">
@@ -311,6 +355,35 @@ export function OpportunityDetail({
                   </a>
                 </Button>
               )}
+<<<<<<< HEAD
+=======
+
+              {userProfile?.role === "student" && !isExpired && (
+                <div className="rounded-lg border p-3">
+                  <Button
+                    variant={interested ? "default" : "outline"}
+                    className="mb-3 w-full"
+                    onClick={() => handleEngagement({ interested: !interested })}
+                  >
+                    <Heart className="mr-2 h-4 w-4" />
+                    {interested ? "Interested" : "Mark interested"}
+                  </Button>
+                  <div className="flex items-center justify-center gap-1">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <Button
+                        key={value}
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleEngagement({ rating: value })}
+                        aria-label={`Rate ${value}`}
+                      >
+                        <Star className={value <= rating ? "h-5 w-5 fill-current text-amber-500" : "h-5 w-5 text-muted-foreground"} />
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
             </CardContent>
           </Card>
 

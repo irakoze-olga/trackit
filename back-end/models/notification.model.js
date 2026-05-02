@@ -40,7 +40,11 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
+<<<<<<< HEAD
       enum: ["deadline_reminder", "status_update", "application_received", "opportunity_verified"],
+=======
+      enum: ["deadline_reminder", "status_update", "application_received", "opportunity_verified", "opportunity_posted", "security_alert"],
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       required: true,
     },
     title: {

@@ -1,11 +1,15 @@
 "use client"
 
 import Link from "next/link"
+<<<<<<< HEAD
 import Image from "next/image"
+=======
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { formatDistanceToNow, format, isPast } from "date-fns"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+<<<<<<< HEAD
 import {
   Calendar,
   MapPin,
@@ -20,6 +24,24 @@ import {
   type Opportunity,
   CATEGORY_LABELS,
   CATEGORY_COLORS
+=======
+import { 
+  Calendar, 
+  MapPin, 
+  Building2, 
+  Globe, 
+  Bookmark, 
+  BookmarkCheck,
+  ExternalLink,
+  Clock,
+  Star,
+  Users,
+} from "lucide-react"
+import { 
+  type Opportunity, 
+  CATEGORY_LABELS, 
+  CATEGORY_COLORS 
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
@@ -45,6 +67,7 @@ export function OpportunityCard({
 
   return (
     <Card className={cn(
+<<<<<<< HEAD
       "group transition-all duration-200 hover:shadow-md hover:border-primary/30 overflow-hidden",
       isExpired && "opacity-60"
     )}>
@@ -90,6 +113,25 @@ export function OpportunityCard({
           <div className="flex-1 min-w-0">
             <Badge
               variant="outline"
+=======
+      "group transition-all duration-200 hover:shadow-md hover:border-primary/30",
+      isExpired && "opacity-60"
+    )}>
+      {opportunity.image_url && (
+        <Link href={`/opportunities/${opportunity.id}`} className="block relative h-40 overflow-hidden rounded-t-lg bg-muted">
+          <img
+            src={opportunity.image_url}
+            alt=""
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </Link>
+      )}
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <Badge 
+              variant="outline" 
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
               className={cn("mb-2 text-xs", CATEGORY_COLORS[opportunity.category])}
             >
               {CATEGORY_LABELS[opportunity.category]}
@@ -100,9 +142,30 @@ export function OpportunityCard({
               </Link>
             </h3>
           </div>
+<<<<<<< HEAD
         </div>
       </CardHeader>
 
+=======
+          {showActions && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0 -mt-1"
+              onClick={() => isSaved ? onUnsave?.(opportunity.id) : onSave?.(opportunity.id)}
+              aria-label={isSaved ? "Remove from saved" : "Save opportunity"}
+            >
+              {isSaved ? (
+                <BookmarkCheck className="h-5 w-5 text-primary" />
+              ) : (
+                <Bookmark className="h-5 w-5" />
+              )}
+            </Button>
+          )}
+        </div>
+      </CardHeader>
+      
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       <CardContent className="pb-3">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground mb-3">
           <div className="flex items-center gap-1.5">
@@ -122,12 +185,33 @@ export function OpportunityCard({
             </div>
           )}
         </div>
+<<<<<<< HEAD
 
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {opportunity.description}
         </p>
       </CardContent>
 
+=======
+        
+        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+          {opportunity.preview_description || opportunity.description}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1">
+            <Users className="h-3.5 w-3.5" />
+            {(opportunity.application_count || 0) + (opportunity.interested_count || 0)} interested/applied
+          </span>
+          {!!opportunity.average_rating && (
+            <span className="inline-flex items-center gap-1">
+              <Star className="h-3.5 w-3.5 fill-current text-amber-500" />
+              {opportunity.average_rating.toFixed(1)}
+            </span>
+          )}
+        </div>
+      </CardContent>
+      
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       <CardFooter className="pt-3 border-t flex flex-col gap-3">
         <div className="flex items-center justify-between w-full">
           <div className={cn(
@@ -140,8 +224,13 @@ export function OpportunityCard({
               <Calendar className="h-4 w-4" />
             )}
             <span>
+<<<<<<< HEAD
               {isExpired
                 ? "Expired"
+=======
+              {isExpired 
+                ? "Expired" 
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
                 : `Due ${formatDistanceToNow(deadlineDate, { addSuffix: true })}`
               }
             </span>
@@ -149,7 +238,11 @@ export function OpportunityCard({
               ({format(deadlineDate, "MMM d, yyyy")})
             </span>
           </div>
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
           <Button variant="ghost" size="sm" asChild>
             <Link href={`/opportunities/${opportunity.id}`}>
               View Details
@@ -157,6 +250,7 @@ export function OpportunityCard({
             </Link>
           </Button>
         </div>
+<<<<<<< HEAD
 
         <div className="flex gap-2">
           <Button
@@ -185,6 +279,16 @@ export function OpportunityCard({
             </Button>
           )}
         </div>
+=======
+        
+        <Button 
+          className="w-full" 
+          onClick={() => onApply?.(opportunity.id)}
+          disabled={isExpired}
+        >
+          Apply Now
+        </Button>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
       </CardFooter>
     </Card>
   )

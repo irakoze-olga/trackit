@@ -5,6 +5,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+<<<<<<< HEAD
   },
   async rewrites() {
     return [
@@ -14,6 +15,9 @@ const nextConfig = {
       },
     ]
   },
+=======
+  }
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 }
 
 export default nextConfig

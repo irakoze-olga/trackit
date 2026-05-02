@@ -95,8 +95,33 @@ const eventSchema = new mongoose.Schema(
     },
     status: {
       type: String,
+<<<<<<< HEAD
       enum: ["draft", "active", "closed"],
       default: "active",
+=======
+      enum: ["draft", "pending_approval", "active", "closed", "rejected"],
+      default: "pending_approval",
+    },
+    approvalStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+      index: true,
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      default: null,
+    },
+    approvedAt: {
+      type: Date,
+      default: null,
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      default: "",
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
     },
     viewsCount: {
       type: Number,
@@ -108,6 +133,19 @@ const eventSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/dsgj2kl7r/image/upload/f_auto,q_auto/96cabaa4-9b9c-4738-8728-f80d4872675d_g97jr2",
     },
+<<<<<<< HEAD
+=======
+    previewTitle: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    previewDescription: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
     isFeatured: {
       type: Boolean,
       default: false,
@@ -158,9 +196,15 @@ eventSchema.pre("validate", function validateEvent() {
 
   this.tags = [...new Set((this.tags || []).map((tag) => String(tag).trim()).filter(Boolean))];
 
+<<<<<<< HEAD
   if (this.status !== "draft" && this.deadline && this.deadline < new Date()) {
     this.status = "closed";
   }
+=======
+    if (!["draft", "pending_approval"].includes(this.status) && this.deadline && this.deadline < new Date()) {
+      this.status = "closed";
+    }
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 });
 
 const Event = mongoose.model("event", eventSchema);

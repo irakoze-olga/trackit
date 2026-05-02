@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
+=======
+import { DashboardShell } from "@/components/dashboard-shell"
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
 import { TeacherOverview } from "@/components/teacher-overview"
 import type { Profile, Opportunity, Application } from "@/lib/types"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -88,6 +92,7 @@ export default function TeacherDashboardPage() {
   }
 
   return (
+<<<<<<< HEAD
     <div className="flex h-screen bg-background">
       <DashboardSidebar profile={data.profile} />
       <main className="flex-1 overflow-auto">
@@ -99,5 +104,15 @@ export default function TeacherDashboardPage() {
         />
       </main>
     </div>
+=======
+    <DashboardShell profile={data.profile} title="Teacher dashboard">
+      <TeacherOverview
+        profile={data.profile}
+        opportunities={data.opportunities}
+        applications={data.applications}
+        stats={data.stats}
+      />
+    </DashboardShell>
+>>>>>>> 844f25bde1b009521ef4ff56a4e8de3314c0f183
   )
 }
